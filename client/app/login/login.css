@@ -1,0 +1,124 @@
+.help-block {
+  color: cadetblue;
+  font-size: 11px;
+}
+
+.has-error .help-block,
+.help-block.error{
+  color: orangered;
+}
+
+.hero-unit i {
+  vertical-align: middle;
+}
+
+.hero-unit .separator {
+  margin: 0 30px;
+}
+
+.hero-unit {
+  position: relative;
+  padding: 30px 15px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  color: #222;
+}
+.hero-unit > i {
+  font-size: 10em;
+}
+
+.login-footer {
+  text-align: center;
+  padding: 30px 0;
+}
+
+.login-form {
+  width: 340px;
+  margin-left: calc(50% - 170px);
+  padding: 0 40px 20px;
+  left: 0;
+  position: absolute;
+  color: #222;
+  -moz-transition: all 1.50s ease-in-out;
+  -o-transition: all 1.50s ease-in-out;
+  -webkit-transition: all 1.50s ease-in-out;
+  transition: all 1.50s ease-in-out;
+}
+.recover-tool {
+  position: absolute;
+  right: 50px;
+  font-size: 30px;
+  bottom: -90px;
+}
+
+/*.background {*/
+  /*padding: 40px 0 70px;*/
+  /*height: 360px;*/
+  /*color: #222;*/
+  /*overflow: hidden;*/
+  /*position: relative;*/
+  /*background: url('../../../assets/images/bg.jpg') no-repeat center center;*/
+  /*-webkit-background-size: cover;*/
+  /*-moz-background-size: cover;*/
+  /*-o-background-size: cover;*/
+  /*background-size: cover;*/
+/*}*/
+
+.background {
+  background: url('../../../assets/images/bg.jpg') no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: -10;
+}
+
+
+.login-access {
+  /*left: -100%;*/
+}
+
+.login-register {
+  left: 100%;
+}
+
+.lgn-btn {
+  /*bottom: 30px;*/
+  position: absolute;
+}
+
+.lgn-btn.onright {
+  right: 20px;
+}
+
+@media (max-width: 500px) {
+  label {
+    margin-bottom: 0;
+  }
+  .hero-unit > i {
+    font-size: 5em;
+  }
+  .hero-unit .separator {
+    margin: 0 10px;
+  }
+  .login-form {
+    width: 100%;
+    margin-left: 0;
+    padding: 0 20px 10px;
+  }
+  .login-form .fa-4x {
+    font-size: 3em;
+  }
+  .login-footer {
+    font-size: 10px;
+  }
+  .form-group {
+    margin-bottom: 2px;
+  }
+  .btn {
+    padding: 6px 2px;
+  }
+}

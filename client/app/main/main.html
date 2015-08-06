@@ -1,0 +1,48 @@
+<div id="map-canvas"></div>
+<div class="monitor shadow">
+  <section class="section user" ng-class="{'active':page=='user'}">
+    <div class="title"><i class="fa fa-fw fa-user"></i> {{cache.user.nick}}</div>
+    <div class="info" ng-show="mypos">
+      <div ng-repeat="i in mypos">{{i.title}}: {{i.value}}{{i.post}}</div>
+    </div>
+    <div ng-hide="mypos">...</div>
+  </section>
+  <section class="section chat" ng-class="{'active':page=='chat'}">
+    <div class="title"><i class="fa fa-fw fa-comments"></i> Chat</div>
+    <div class="chat-container" scroller="scroller-msg">
+      <div class="messages-container scroller-target">
+        <div class="chat-message" ng-class="{'by-me':m.member==cache.user.nick}" ng-repeat="m in cache.messages">
+          <div class="chat-msg-header">
+            <i class="fa fa-caret-right" ng-show="m.member==cache.user.nick"></i>
+            [{{getDate(m.timestamp)}}] - {{m.member==cache.user.nick ? 'IO' : m.member}}
+            <i class="fa fa-caret-left" ng-hide="m.member==cache.user.nick"></i>
+          </div>
+          {{m.text}}
+        </div>
+      </div>
+    </div>
+    <div class="chat-text">
+      <div class="input-group input-group-sm">
+        <span class="input-group-addon" id="sizing-addon3"><i class="fa fa-commenting"></i></span>
+        <input class="form-control" type="text" ng-model="message" ng-keydown="hkey($event)">
+      </div>
+    </div>
+  </section>
+  <section class="section group" ng-class="{'active':page=='group'}">
+    <div class="title"><i class="fa fa-fw fa-users"></i> {{cache.group.group}} ({{members ? members.length : 0}})</div>
+    <div class="others-container" scroller>
+      <div class="others scroller-target" ng-show="members && members.length">
+        <div class="user-item aslink" ng-repeat="m in members" ng-click="center(m)">
+          <span>{{$index+1}}</span><i class="fa fa-user" ></i> {{m.k}}  ({{m.k[0]}})<i class="fa fa-info-circle onright" ng-click="details(m)"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <i class="fa fa-sign-out aslink" ng-click="logout()" title="Esci"></i>
+    <i class="fa fa-user-plus aslink" ng-click="invite()" title="Invita altri amici"></i>
+    <i class="fa fa-crosshairs aslink" ng-click="center()" title="Centra la mia posizione"></i>
+    <i class="btn-hidden fa aslink onright" ng-click="swipe()"
+       ng-class="{'fa-comments':page=='user', 'fa-users':page=='chat', 'fa-user':page=='group'}"></i>
+  </footer>
+</div>
