@@ -1,68 +1,65 @@
 <div class="background"></div>
 
 <header class="hero-unit">
-  <i class="fa fa-map-marker"></i>
+  <i class="fa fa-map-marker jump"></i>
+  <div class="login-title">
+    <p ng-show="onnewgroup">Crea un nuovo gruppo</p>
+    <p ng-hide="onnewgroup">Accedi ad un gruppo</p>
+    <p>per condividere messaggi e posizione</p>
+  </div>
 </header>
 
 <div>
   <div class="login-form" ng-class="{'login-access':!loginform}">
     <form class="form" name="formlgn" ng-submit="login(formlgn)" novalidate>
-      <div class="form-group" ng-class="{ 'has-success': formlgn.group.$valid && submitted,'has-error': formlgn.group.$invalid && submitted }">
-        <label>Gruppo</label>
-        <input type="text" name="group" class="form-control" ng-model="user.group" required mongoose-error/>
-        <p class="help-block" ng-show="formlgn.group.$error.required && submitted"> Inserisci il nome del gruppo.</p>
-        <p class="help-block" ng-show="formlgn.group.$error.mongoose"> {{ errors.group }}</p>
-      </div>
-      <div class="form-group" ng-class="{ 'has-success': formlgn.password.$valid && submitted,'has-error': formlgn.password.$invalid && submitted }">
-        <label>Password</label>
-        <input type="password" name="password" class="form-control" ng-model="user.password" ng-minlength="3" required mongoose-error/>
-        <p class="help-block" ng-show="(formlgn.password.$error.minlength || formlgn.password.$error.required) && submitted"> La password deve avere almeno 3 caratteri.</p>
-        <p class="help-block" ng-show="formlgn.password.$error.mongoose">{{ errors.password }}</p>
-      </div>
-      <div class="form-group" ng-class="{ 'has-success': formlgn.nick.$valid && submitted,'has-error': formlgn.nick.$invalid && submitted }">
-        <label>Nick</label>
-        <input type="text" name="nick" class="form-control" ng-model="user.nick" required mongoose-error/>
-        <p class="help-block" ng-show="formlgn.nick.$error.required && submitted"Your nick-name.</p>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group form-group-sm" ng-class="{ 'has-success': formlgn.group.$valid && submitted,'has-error': formlgn.group.$invalid && submitted }">
+            <label>Gruppo</label>
+            <input type="text" name="group" class="form-control" ng-model="user.group" required mongoose-error/>
+            <p class="help-block" ng-show="formlgn.group.$error.required && submitted"> Inserisci il nome del gruppo.</p>
+            <p class="help-block" ng-show="formlgn.group.$error.mongoose"> {{ errors.group }}</p>
+          </div>
+
+          <div class="form-group form-group-sm" ng-class="{ 'has-success': formlgn.password.$valid && submitted,'has-error': formlgn.password.$invalid && submitted }">
+            <label>Password</label>
+            <input type="password" name="password" class="form-control" ng-model="user.password" ng-minlength="3" required mongoose-error/>
+            <p class="help-block" ng-show="(formlgn.password.$error.minlength || formlgn.password.$error.required) && submitted"> La password deve avere almeno 3 caratteri.</p>
+            <p class="help-block" ng-show="formlgn.password.$error.mongoose">{{ errors.password }}</p>
+          </div>
+          <div class="form-group form-group-sm" ng-class="{ 'has-success': formlgn.nick.$valid && submitted,'has-error': formlgn.nick.$invalid && submitted }">
+            <label>Nick</label>
+            <input type="text" name="nick" class="form-control" ng-model="user.nick" required mongoose-error/>
+            <p class="help-block" ng-show="formlgn.nick.$error.required && submitted">Definisci un soprannome</p>
+          </div>
+          <div class="buttons-container">
+            <button class="btn btn-transparent lgn-btn" type="submit"><i class="fa fa-4x fa-play-circle" ng-mouseover="onnewgroup=false"></i></button>
+          </div>
+        </div>
+        <div class="col-sm-6 new-group-section" ng-class="{'over':onnewgroup}">
+          <div class="form-group form-group-sm">
+            <label>Ripeti Password</label>
+            <input type="password" name="confirmPassword" class="form-control" ng-model="user.password2" ng-minlength="3" compare-to="user.password" compare-if="newgroup"/>
+            <p class="help-block error" ng-show="formlgn.confirmPassword.$error.compareTo && submitted && newgroup"> Ripeti la password correttamente.</p>
+          </div>
+          <div class="form-group form-group-sm">
+            <label>Invita amici</label>
+            <textarea class="form-control invite" ng-model="user.invite" rows="5" placeholder="elenco delle mail"></textarea>
+          </div>
+          <div class="buttons-container">
+            <button class="btn btn-transparent lgn-btn" type="button" ng-click="creategroup(formlgn)" ng-mouseover="onnewgroup=true"><i class="fa fa-4x fa-magic"></i></button>
+          </div>
+        </div>
       </div>
       <div class="form-group has-error">
         <p class="help-block">{{ errors.other }}</p>
       </div>
-      <div class="buttons-container">
-        <button class="btn btn-transparent lgn-btn" type="button"><i class="fa fa-4x fa-magic"></i></button>
-        <button class="btn btn-transparent lgn-btn onright" type="submit"><i class="fa fa-4x fa-play-circle"></i></button>
-      </div>
     </form>
   </div>
-  <!--<div class="login-form hidden" ng-class="{'login-register':loginform}">-->
-    <!--<form class="form" name="formreg" ng-submit="register(formreg)" novalidate>-->
-      <!--<div class="form-group" ng-class="{ 'has-success': formreg.email.$valid && submitted,'has-error': formreg.email.$invalid && submitted }">-->
-        <!--<label>Email</label>-->
-        <!--<input type="email" name="email" class="form-control" ng-model="user.email" required mongoose-error/>-->
-        <!--<p class="help-block error" ng-show="formreg.email.$error.email && submitted"> Sembra non essere una e-mail valida.</p>-->
-        <!--<p class="help-block error" ng-show="formreg.email.$error.required && submitted"> Inserisci il tuo indirizzo e-mail.</p>-->
-        <!--<p class="help-block error" ng-show="formreg.email.$error.mongoose"> {{ errors.email }}</p>-->
-      <!--</div>-->
-      <!--<div class="form-group" ng-class="{ 'has-success': formreg.password.$valid && submitted,'has-error': formreg.password.$invalid && submitted }">-->
-        <!--<label>Password</label>-->
-        <!--<input type="password" name="password" class="form-control" ng-model="user.password" ng-minlength="3" required mongoose-error/>-->
-        <!--<p class="help-block error" ng-show="(formreg.password.$error.minlength || formreg.password.$error.required) && submitted"> La password deve avere almeno 3 caratteri.</p>-->
-        <!--<p class="help-block error" ng-show="formreg.password.$error.mongoose">{{ errors.password }}</p>-->
-      <!--</div>-->
-      <!--<div class="form-group" ng-class="{ 'has-success': formreg.confirmPassword.$error.compareTo && submitted,'has-error': formreg.confirmPassword.$invalid && submitted }">-->
-        <!--<label>Ripeti Password</label>-->
-        <!--<input type="password" name="confirmPassword" class="form-control" ng-model="user.password2" ng-minlength="3" required compare-to="user.password"/>-->
-        <!--<p class="help-block error" ng-show="formreg.confirmPassword.$error.compareTo && submitted"> Ripeti la password correttamente.</p>-->
-      <!--</div>-->
-      <!--<div class="buttons-container">-->
-        <!--<button class="btn due-fa-btn due-fa-btn-trsp lgn-btn" type="button" ng-click="toggle(true)"><i class="fa fa-4x fa-sign-in"></i></button>-->
-        <!--<button class="btn due-fa-btn due-fa-btn-trsp lgn-btn onright" type="submit"><i class="fa fa-4x fa-play-circle"></i></button>-->
-      <!--</div>-->
-    <!--</form>-->
-  <!--</div>-->
 </div>
 
 <footer class="footer login-footer">
   <div class="container">
-    <p>QUI v{{version}} | <a href="https://github.com/leolmi/qui/issues?state=open">Issues</a></p>
+    <p>{{product.name}} v{{product.version}} | <a href="https://github.com/leolmi/qui/issues?state=open"><i class="fa fa-github"></i> Issues</a></p>
   </div>
 </footer>

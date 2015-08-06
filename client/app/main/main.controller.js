@@ -72,6 +72,10 @@ angular.module('quiApp')
       return old;
     }
 
+    function welcome() {
+      //TODO: mostra la finestra di benvenuto nel gruppo.
+    }
+
     function amI(member){ return (member==$scope.cache.user.nick); }
 
     function refreshMarkers() {
@@ -102,6 +106,7 @@ angular.module('quiApp')
             $scope.center();
           mbm.splice(index,1);
           _firstcenter = true;
+          welcome();
         }
         //mbm = _.difference(mbm, [$scope.cache.user.nick]);
         if (mbm.length>0)

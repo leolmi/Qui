@@ -3,6 +3,12 @@
 
 angular.module('quiApp')
   .factory('cache', ['$http','socket','util','$timeout',function($http,socket,u,$timeout) {
+
+    var _product = {
+      name: 'Ndo6',
+      version: '1.0.4'
+    };
+
     function Infos() {
       return {
         errors:[],
@@ -245,6 +251,7 @@ angular.module('quiApp')
     loadLocal();
 
     return {
+      product:_product,
       infos: function() { return _infos; },
       reset:reset,
       init:init,
