@@ -15,18 +15,15 @@
   text-rendering: optimizeLegibility;
 }
 
-.jump {
+.fa-jump {
   -webkit-animation: jump 2s infinite;
   animation: jump 2s infinite;
 
   -webkit-transform-origin: center bottom;
   transform-origin: center bottom;
-
-  -webkit-transition: padding .3s, bottom .3s;
-  transition: padding .3s, bottom .3s;
 }
 
-.jump:hover {
+.fa-jump:hover {
   -webkit-animation: pendular 5s ease-in-out infinite;
   animation: pendular 5s ease-in-out infinite;
 }
