@@ -1,10 +1,13 @@
+.modal-header{
+  font-weight: bold;
+}
 .modal-primary .modal-header,
 .modal-info .modal-header,
 .modal-success .modal-header,
 .modal-warning .modal-header,
 .modal-danger .modal-header {
   color: #fff;
-  border-radius: 5px 5px 0 0;
+  /*border-radius: 5px 5px 0 0;*/
 }
 .modal-primary .modal-header {
   background: #428bca;
@@ -21,10 +24,21 @@
 .modal-danger .modal-header {
   background: #d9534f;
 }
-.modal-edit .modal-header {
+.modal-popup .modal-header {
+  /*background: url('../../../assets/images/bg.jpg') no-repeat;*/
   background: yellowgreen;
   color: #222;
-  border-radius: 5px 5px 0 0;
+}
+
+.modal-primary .modal-header,
+.modal-info .modal-header,
+.modal-success .modal-header,
+.modal-warning .modal-header,
+.modal-danger .modal-header,
+.modal-popup .modal-header,
+.modal-footer,
+.modal-content {
+  border-radius: 0;
 }
 
 .modal-body {
@@ -39,29 +53,18 @@
   font-size: 16px;
 }
 
+.modal-dialog {
+  font-variant: small-caps;
+  text-rendering: optimizeLegibility;
+}
+.modal-dialog .btn {
+  padding: 4px 10px;
+  border-radius: 0;
+}
+
 @media (max-width: 500px) {
   .modal-dialog {
     margin: 0;
-  }
-  .modal-primary .modal-header,
-  .modal-info .modal-header,
-  .modal-success .modal-header,
-  .modal-warning .modal-header,
-  .modal-danger .modal-header,
-  .modal-edit .modal-header,
-  .modal-footer,
-  .modal-content {
-    border-radius: 0;
-  }
-  .modal-edit > .monitor {
-    height: 80px;
-  }
-  .monitor-content {
-    font-size: 16px;
-    padding: 0 80px 0 60px;
-  }
-  .monitor .fa-5x {
-    font-size: 4em;
   }
   .modal-body label {
     margin-bottom: 0;

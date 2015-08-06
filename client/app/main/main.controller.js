@@ -40,7 +40,7 @@ angular.module('quiApp')
       return filtered;
     };
   }])
-  .controller('MainCtrl', ['$scope','$location','$rootScope','$window','Auth','$http','socket','initializer','$timeout','cache','util','groupByFilter','Logger', function ($scope,$location,$rootScope,$window,Auth,$http,socket,initializer,$timeout,cache,u,groupBy,Logger) {
+  .controller('MainCtrl', ['$scope','$location','$rootScope','$window','Auth','$http','socket','initializer','$timeout','cache','util','groupByFilter','Logger','Modal', function ($scope,$location,$rootScope,$window,Auth,$http,socket,initializer,$timeout,cache,u,groupBy,Logger,Modal) {
     var _markers = [];
     $scope.loading = true;
     $scope.page = 'user';
@@ -72,8 +72,16 @@ angular.module('quiApp')
       return old;
     }
 
+    var modalWelcome = Modal.confirm.popup();
     function welcome() {
-      //TODO: mostra la finestra di benvenuto nel gruppo.
+      var opt = {
+        title: 'Benvenuto nel gruppo '+$scope.cache.group.group+', '+$scope.cache.user.nick ,
+        template: Modal.TEMPLATE_WELCOME,
+        ok: true
+      };
+      modalWelcome(opt);
+      $scope.cache.welcomed = true;
+      cache.update();
     }
 
     function amI(member){ return (member==$scope.cache.user.nick); }
@@ -106,9 +114,9 @@ angular.module('quiApp')
             $scope.center();
           mbm.splice(index,1);
           _firstcenter = true;
-          welcome();
+          if (!$scope.cache.welcomed)
+            welcome();
         }
-        //mbm = _.difference(mbm, [$scope.cache.user.nick]);
         if (mbm.length>0)
           Logger.info('Si sono aggiunti nuovi membri!', mbm.join());
         mbm = _.difference(old, cur);
@@ -186,15 +194,30 @@ angular.module('quiApp')
       }
     };
 
+    var modalInvite = Modal.confirm.popup(function(opt){
+      Logger.info('TODO','invita gli amici nel gruppo: '+JSON.stringify(opt));
+      //cache.invite(opt.mails, cache.user);
+    });
     $scope.invite = function() {
-      Logger.info('TODO','invita gli amici nel gruppo...');
+      var opt = {
+        title: 'Invita altre persone nel gruppo indicandone la mail',
+        template: Modal.TEMPLATE_INVITE,
+        ok:true,
+        cancel:true
+      };
+      modalInvite(opt);
     };
 
+
+    var modalDetails = Modal.confirm.popup();
     $scope.details = function(m) {
-      Logger.monitor('Dettagli','...');
-      $timeout(function() {
-        Logger.monitor('Dettagli ' + m.k, JSON.stringify(cache.getInfos(m.v.last())));
-      }, 500);
+      var opt = {
+        title:'Dettagli del membro: '+ m.k + '  ('+ m.k[0]+') sulla mappa',
+        template: Modal.TEMPLATE_MEMBERINFO,
+        ok:true,
+        member:m
+      };
+      modalDetails(opt);
     };
 
     refreshMarkers();

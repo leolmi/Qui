@@ -4,6 +4,9 @@ angular.module('quiApp')
   .factory('Modal', ['$rootScope','$modal','cache',function ($rootScope,$modal,cache) {
     var modal_DELETE = 'delete';
     var modal_YESNOCANCEL = 'yesnocancel';
+    var template_WELCOME = 'welcome';
+    var template_INVITE = 'invite';
+    var template_MEMBERINFO = 'memberinfo';
     /**
      * Opens a modal
      * @param  {Object} scope      - an object to be merged with modal's scope
@@ -30,9 +33,13 @@ angular.module('quiApp')
       cache.data.ismodal = false;
     }
 
+
     return {
       MODAL_DELETE:modal_DELETE,
       MODAL_YESNOCANCEL:modal_YESNOCANCEL,
+      TEMPLATE_WELCOME:template_WELCOME,
+      TEMPLATE_INVITE:template_INVITE,
+      TEMPLATE_MEMBERINFO:template_MEMBERINFO,
 
       /* Confirmation modals */
       confirm: {
@@ -58,7 +65,7 @@ angular.module('quiApp')
           };
           switch(type) {
             case(modal_DELETE):
-              opt.title = 'Confirma Eliminazione';
+              opt.title = 'Conferma Eliminazione';
               opt.body = '<p>Sicuro di voler eliminare <strong>' + args[0] + '</strong> ?</p>';
               opt.ok = 'Elimina';
               opt.okClass = 'btn-danger';
@@ -135,108 +142,72 @@ angular.module('quiApp')
               resetModalState();
             });
           };
-        }//,
+        },
 
 
-        ///**
-        // * Modifica una scadenza ...
-        // * @param  {Function} exc - callback, ran when execution is confirmed
-        // * @param  {Function} [dsc] - callback, ran when execution is discard
-        // * @returns {Function}
-        // */
-        //edit: function(exc, dsc) {
-        //  exc = exc || angular.noop;
-        //  dsc = dsc || angular.noop;
-        //
-        //  return function() {
-        //    var args = Array.prototype.slice.call(arguments);
-        //
-        //    var editModal = openModal({
-        //      modal: {
-        //        item: args[0],
-        //        dismissable: true,
-        //        idle: false,
-        //        title: args[0].name,
-        //        template: 'components/modal/modal-edit.html',
-        //        buttons: [{
-        //          classes: 'btn-primary onleft',
-        //          text: 'Inserisci Valuta',
-        //          click: function(e) {
-        //            args.push({ action: 'handle'});
-        //            editModal.dismiss(e);
-        //          }
-        //        },{
-        //          classes: 'btn-success',
-        //          text: 'Ok',
-        //          click: function(e) {
-        //            editModal.close(e);
-        //          }
-        //        },{
-        //          classes: 'btn-warning',
-        //          text: 'Annulla',
-        //          click: function(e) {
-        //            editModal.dismiss(e);
-        //          }
-        //        }]
-        //      }
-        //    }, 'modal-edit');
-        //
-        //    editModal.result.then(function(event) {
-        //      exc.apply(event, args);
-        //      resetModalState();
-        //    }, function() {
-        //      dsc.apply(event, args);
-        //      resetModalState();
-        //    });
-        //  };
-        //},
+        /**
+         * Popup
+         * @param  {Function} exc - callback, ran when execution is confirmed
+         * @param  {Function} [dsc] - callback, ran when execution is discard
+         * @returns {Function}
+         */
+        popup: function(exc, dsc) {
+          exc = exc || angular.noop;
+          dsc = dsc || angular.noop;
 
-        ///**
-        // * Aggiunge il pagamento
-        // * @param add
-        // */
-        //handle: function(cb) {
-        //  cb = cb || angular.noop;
-        //
-        //  /**
-        //   * Apre il form modale
-        //   * @param thing
-        //   */
-        //  return function() {
-        //    var args = Array.prototype.slice.call(arguments),
-        //      handleModal;
-        //
-        //    handleModal = openModal({
-        //      modal: {
-        //        dismissable: true,
-        //        title: args[0].name,
-        //        state: args[1],
-        //        template: 'components/modal/modal-handle.html',
-        //        buttons: [{
-        //          classes: 'btn-success',
-        //          text: 'OK',
-        //          click: function(e) { handleModal.close(e); }
-        //        }, {
-        //          classes: 'btn-warning',
-        //          text: 'Annulla',
-        //          click: function(e) { handleModal.dismiss(e); }
-        //        }],
-        //        openDate: function(event) {
-        //          event.preventDefault();
-        //          event.stopPropagation();
-        //          this.opened = true;
-        //        }
-        //      }
-        //    }, 'modal-edit');
-        //
-        //    handleModal.result.then(function(event) {
-        //      cb.apply(event, args);
-        //      resetModalState();
-        //    }, function() {
-        //      resetModalState();
-        //    });
-        //  };
-        //}
+
+          /**
+           * l'argomento principale è strutturato così:
+           * args[0] => opt:
+           *    opt.ok = { text:'OK' }
+           *    opt.cancel = { text:'Annulla' }
+           *    opt.title
+           *    opt.template
+           */
+          return function() {
+            var args = Array.prototype.slice.call(arguments),
+              popupModal;
+
+            var buttons = [];
+            if (args[0].ok){
+              buttons.push({
+                classes: 'btn-success',
+                text: args[0].ok.text || 'Ok',
+                click: function(e) {
+                  popupModal.close(e);
+                }
+              });
+            }
+            if (args[0].cancel) {
+              buttons.push({
+                classes: 'btn-warning',
+                text: args[0].cancel.text || 'Annulla',
+                click: function(e) {
+                  popupModal.dismiss(e);
+                }
+              });
+            }
+
+            popupModal = openModal({
+              modal: {
+                context: args[0],
+                dismissable: true,
+                idle: false,
+                title: args[0].title,
+                template: 'components/modal/'+args[0].template+'.html',
+                buttons: buttons
+              }
+            }, 'modal-popup');
+
+            popupModal.result.then(function(event) {
+              exc.apply(event, args);
+              resetModalState();
+            }, function() {
+              dsc.apply(event, args);
+              resetModalState();
+            });
+          };
+        }
       }
     };
   }]);

@@ -19,6 +19,7 @@ angular.module('quiApp')
         items:[],
         messages:[],
         current:[],
+        welcomed:false,
         pos:{
           latitude: null,
           longitude: null,
@@ -88,7 +89,8 @@ angular.module('quiApp')
     function saveLocal() {
       var linfo = {
         group: _infos.group,
-        nick: _infos.user.nick
+        nick: _infos.user.nick,
+        welcomed: _infos.welcomed
       };
       var content = JSON.stringify(linfo);
       localStorage.setItem("QUI-STORE", content);
@@ -100,17 +102,18 @@ angular.module('quiApp')
       try {
         var linfo = JSON.parse(content);
         if (linfo && linfo.group)
-          init(linfo.group, linfo.nick);
+          init(linfo.group, linfo.nick, null, linfo.welcomed);
       }
       catch (err) {
         localStorage.clear();
       }
     }
 
-    function init(g, nick, cb) {
+    function init(g, nick, cb, welcomed) {
       cb = cb || angular.noop;
       _active = true;
       _infos.group = g;
+      _infos.welcomed = welcomed==true ? true : false;
       _infos.user = {
         nick: nick
       };
@@ -260,6 +263,7 @@ angular.module('quiApp')
     loadLocal();
 
     return {
+      update:saveLocal,
       testGeo:testGeo,
       data:_data,
       product:_product,
