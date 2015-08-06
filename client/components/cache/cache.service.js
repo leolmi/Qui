@@ -176,7 +176,7 @@ angular.module('quiApp')
       addInfo(infos, 'Precisione Altezza', pos.altitudeAccuracy, 'm');
       addInfo(infos, 'Declinazione', pos.heading, '°');
       addInfo(infos, 'Velocità', pos.speed, 'm/s');
-      addInfo(infos, 'Data', u.getDate(pos.timestamp), '');
+      addInfo(infos, 'Data Rilevazione', u.getDate(pos.timestamp), '');
       return infos;
     }
 

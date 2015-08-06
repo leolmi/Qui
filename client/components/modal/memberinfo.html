@@ -1,4 +1,6 @@
 <div ng-controller="MemberInfoCtrl">
-  <p>Corpo del form di info sul membro del gruppo....</p>
-  <p>1 dfgsfdgdfsgsdfg sdfgsdf</p>
+  <h2 style="margin: 0 0 10px;">{{modal.context.nick}}</h2>
+  <div ng-repeat="i in modal.context.member">{{i.title}}: {{i.value}}{{i.post}}</div>
+  <br>
+  <div>Distanza da me: {{distance.toFixed(2)}}m</div>
 </div>

@@ -147,7 +147,7 @@ angular.module('quiApp')
 
         /**
          * Popup
-         * @param  {Function} exc - callback, ran when execution is confirmed
+         * @param  {Function} [exc] - callback, ran when execution is confirmed
          * @param  {Function} [dsc] - callback, ran when execution is discard
          * @returns {Function}
          */

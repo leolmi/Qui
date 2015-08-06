@@ -5,7 +5,7 @@ angular.module('quiApp')
   .factory('initializer', function($window, $q){
 
     //Google's url for async maps initialization accepting callback function
-    var asyncUrl = 'https://maps.googleapis.com/maps/api/js?callback=',
+    var asyncUrl = 'https://maps.googleapis.com/maps/api/js?libraries=geometry,places&callback=',
       mapsDefer = $q.defer();
 
     //Callback function - resolving promise after maps successfully loaded
@@ -212,10 +212,12 @@ angular.module('quiApp')
     var modalDetails = Modal.confirm.popup();
     $scope.details = function(m) {
       var opt = {
-        title:'Dettagli del membro: '+ m.k + '  ('+ m.k[0]+') sulla mappa',
+        title:'Dettagli del membro: '+ m.k + ',  ('+ m.k[0]+') sulla mappa',
         template: Modal.TEMPLATE_MEMBERINFO,
         ok:true,
-        member:m
+        pos:m.v.last(),
+        member: cache.getInfos(m.v.last()),
+        nick: m.k
       };
       modalDetails(opt);
     };
