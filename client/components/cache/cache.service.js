@@ -208,29 +208,7 @@ angular.module('quiApp')
     }
 
     function herror(err, noread){
-      var msg = err && err.message ? err.message : 'An unknown error occurred.';
-      if (err.code) {
-        switch (err.code) {
-          case err.PERMISSION_DENIED:
-            _infos.errors.push("User denied the request for Geolocation.");
-            break;
-          case err.POSITION_UNAVAILABLE:
-            _infos.errors.push("Location information is unavailable.");
-            break;
-          case err.TIMEOUT:
-            _infos.errors.push("The request to get user location timed out.");
-            break;
-          case err.UNKNOWN_ERROR:
-            _infos.errors.push("An unknown error occurred.");
-            break;
-          default :
-            _infos.errors.push(msg);
-            break;
-        }
-      }
-      else {
-        _infos.errors.push(msg);
-      }
+      _infos.errors.push(err.message);
       if (!noread)
         readPositionTimeout();
     }
@@ -250,14 +228,45 @@ angular.module('quiApp')
       }
     }
 
+
+    function testGeo(cb) {
+      cb = cb || angular.noop;
+      if (!navigator.geolocation)
+        return cb({code:'UNSUPPORTED', message:'Geolocation is not supported by this browser."'});
+      navigator.geolocation.getCurrentPosition(cb, cb);
+    }
+
+    function invite(str, u) {
+      if (!str) return;
+      var mails = [];
+      var rgx = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}/gi;
+      var m;
+      while ((m = rgx.exec(str)) !== null) {
+        if (m.index === rgx.lastIndex) {
+          rgx.lastIndex++;
+        }
+        if (m[0]) mails.push(m[0]);
+      }
+      if (mails.length <= 0) return;
+      pushPos({
+        action: 'invite',
+        mails: mails,
+        groupname: u.group,
+        password: u.password,
+        sender: u.nick
+      });
+    }
+
     loadLocal();
 
     return {
+      testGeo:testGeo,
       data:_data,
       product:_product,
       infos: function() { return _infos; },
       reset:reset,
       init:init,
+      invite:invite,
       getInfos:getInfos,
       pushPos:pushPos,
       pushMsg:pushMsg,

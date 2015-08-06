@@ -23,6 +23,10 @@ function handle(pos, cb){
       Group.find({group:pos.group, member:pos.member})
         .remove(function(){ cb(true); });
       break;
+    case 'invite':
+      console.log('[INVITE]: '+JSON.stringify(pos.mails));
+      //TODO: manda le email di invito
+      break;
     default :
       cb(true);
   }
