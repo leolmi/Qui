@@ -8,7 +8,9 @@ angular.module('quiApp')
       name: 'Ndo6',
       version: '1.0.4'
     };
-
+    var _data = {
+      ismodal: false
+    };
     function Infos() {
       return {
         errors:[],
@@ -251,6 +253,7 @@ angular.module('quiApp')
     loadLocal();
 
     return {
+      data:_data,
       product:_product,
       infos: function() { return _infos; },
       reset:reset,

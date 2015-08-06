@@ -1,0 +1,48 @@
+<div class="modal-edit" ng-controller="ModalEditCtrl">
+  <div class="monitor">
+    <i class="fa fa-5x onleft"
+       ng-class="{'fa-exclamation-circle':modal.item.data.expired && modal.item.data.state!=2, 'fa-clock-o':!modal.item.data.expired}"></i>
+    <div class="monitor-content" >
+      <p class="monitor-warning" ng-show="modal.item.data.expired && modal.item.data.state!=2">Scaduto <small>da {{modal.item.data.delta}} giorni!</small></p>
+      <p class="monitor-warning" ng-show="!modal.item.data.expired">Scadenza <small>tra {{modal.item.data.delta}} giorni</small></p>
+      <div ng-switch="modal.item.data.state">
+        <p ng-switch-when="0"><small>€</small>{{modal.item.value}}</p>
+        <p ng-switch-when="1">Rimangono <small>€</small><strong>{{modal.item.data.realvalue.toFixed(2)}}</strong>  <small>(<small>€</small>{{modal.item.value}})</small></p>
+        <p ng-switch-when="2" class="monitor-warning">Fatto!</p>
+      </div>
+    </div>
+    <i class="fa fa-5x onright" ng-class="{'fa-circle-o':modal.item.data.state==0, 'fa-adjust':modal.item.data.state==1, 'fa-check-circle':modal.item.data.state==2}"></i>
+  </div>
+  <label>Titolo Scadenza</label>
+  <input type="text" class="form-control input-sm" ng-model="modal.item.name">
+  <label>Data</label>
+  <input id="timepicker-edit" type="date" class="form-control input-sm" datepicker-popup ng-model="modal.item.real_date"
+      is-open="opened" datepicker-options="dateOptions" close-text="Close" ng-change="syncdate()"/>
+  <label>Valore</label>
+  <div class="input-group">
+    <div class="input-group-addon">€</div>
+    <input type="number" class="form-control bold-text" ng-model="modal.item.value">
+    <span class="input-group-btn">
+      <button class="btn" type="button" ng-click="toggleType()"
+        ng-class="{'btn-success':modal.item.type=='in', 'btn-danger':modal.item.type=='out'}">
+        <i class="fa" ng-class="{'fa-sign-in':modal.item.type=='in', 'fa-sign-out':modal.item.type=='out'}"></i>
+      </button>
+    </span>
+  </div>
+  <label class="label-alone">
+    <i class="fa fa-fw aslink" ng-click="toggleAuto()" ng-class="{'fa-toggle-on':modal.item.automatic, 'fa-toggle-off':!modal.item.automatic}"></i> Automatico
+  </label>
+  <label>Budgets</label>
+  <tag-editor tags="modal.item.budgets" alltags="cache.tags"></tag-editor>
+  <label>Dettagli</label>
+  <textarea ng-model="modal.item.info" rows="2" class="form-control vertical"></textarea>
+  <div ng-show="!modal.item.automatic && modal.item.state.length>0">
+    <label>{{modal.item.type=='in' ? 'Riscossioni' : 'Pagamenti' }}</label>
+    <div class="item-state" ng-repeat="s in modal.item.state">
+      <div class="date">{{getDateStr(s.date)}}</div>
+      <div class="value onleft bold-text" ng-class="{'success':modal.item.type=='in', 'danger':modal.item.type=='out'}"><small>€</small>{{s.value}}</div>
+      <div class="content">{{s.type}} {{s.desc}}</div>
+      <button class="btn btn-danger" type="button" ng-click="deleteState($index)"><i class="fa fa-times"></i></button>
+    </div>
+  </div>
+</div>
