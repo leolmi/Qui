@@ -28,15 +28,14 @@ function handle(pos, cb){
   }
 }
 
-// Inserts a new item in the DB.
+// Inserts a new item in the DB or exec actions.
 exports.insert = function(req, res) {
-  console.log('[new item]: '+JSON.stringify(req.body));
+  console.log('[INSERT]: '+JSON.stringify(req.body));
   if (req.body._id)
     delete req.body._id;
 
   handle(req.body, function(handled){
     if (handled) return res.json(200);
-    console.log('NESSUNA AZIONE PRESENTE NEL MESSAGGIO');
     Group.create(req.body, function (err, item) {
       if (err)
         return handleError(res, err);

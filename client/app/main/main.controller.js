@@ -192,7 +192,5 @@ angular.module('quiApp')
       }, 500);
     };
 
-
-
     refreshMarkers();
   }]);
