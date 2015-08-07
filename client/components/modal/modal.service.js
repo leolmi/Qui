@@ -163,11 +163,13 @@ angular.module('quiApp')
            *    opt.cancel = { text:'Annulla' }
            *    opt.title
            *    opt.template
+           *    opt.show.header = true/false
+           *    opt.show.footer = true/false
            */
           return function() {
             var args = Array.prototype.slice.call(arguments),
               popupModal;
-
+            var show = args[0].show || { header: true, footer:true };
             var buttons = [];
             if (args[0].ok){
               buttons.push({
@@ -195,7 +197,8 @@ angular.module('quiApp')
                 idle: false,
                 title: args[0].title,
                 template: 'components/modal/'+args[0].template+'.html',
-                buttons: buttons
+                buttons: buttons,
+                show: show
               }
             }, 'modal-popup');
 

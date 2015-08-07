@@ -40,13 +40,14 @@ angular.module('quiApp')
       return filtered;
     };
   }])
-  .controller('MainCtrl', ['$scope','$location','$rootScope','$window','Auth','$http','socket','initializer','$timeout','cache','util','groupByFilter','Logger','Modal', function ($scope,$location,$rootScope,$window,Auth,$http,socket,initializer,$timeout,cache,u,groupBy,Logger,Modal) {
+  .controller('MainCtrl', ['$scope','$location','$rootScope','$window','Auth','$http','socket','initializer','$timeout','cache','util','Logger','Modal', function ($scope,$location,$rootScope,$window,Auth,$http,socket,initializer,$timeout,cache,u,Logger,Modal) {
     var _markers = [];
     $scope.loading = true;
     $scope.page = 'user';
-    $scope.cache = cache.infos();
     $scope.getDate = u.getDate;
     var _firstcenter = false;
+
+    $scope.cache = function() { return cache.infos() };
 
     initializer.mapsInitialized.then(function() {
       var options = {
@@ -56,11 +57,22 @@ angular.module('quiApp')
       };
 
       $scope.map = new google.maps.Map(document.getElementById('map-canvas'), options);
-
-      $scope.loading = false;
+      google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+        refreshMarkers();
+        $scope.loading = false;
+      });
     }, function(err){
       $scope.error = err ? err.message : 'Errori nel caricamento della mappa!';
+      $scope.loading = false;
+      refreshMarkers();
+      checkErrors();
     });
+
+
+    function checkErrors() {
+      if ($scope.error)
+        Logger.error('Attenzione', $scope.error)
+    }
 
     function clearMarkers() {
       var old = [];
@@ -75,22 +87,25 @@ angular.module('quiApp')
     var modalWelcome = Modal.confirm.popup();
     function welcome() {
       var opt = {
-        title: 'Benvenuto nel gruppo '+$scope.cache.group.group+', '+$scope.cache.user.nick ,
+        title: 'Benvenuto nel gruppo '+$scope.cache().group.group+', '+$scope.cache().user.nick ,
         template: Modal.TEMPLATE_WELCOME,
-        ok: true
+        ok: true,
+        show:{
+          footer:true
+        }
       };
       modalWelcome(opt);
-      $scope.cache.welcomed = true;
+      $scope.cache().welcomed = true;
       cache.update();
     }
 
-    function amI(member){ return (member==$scope.cache.user.nick); }
+    function amI(member){ return (member==$scope.cache().user.nick); }
 
     function refreshMarkers() {
       try {
         var old = clearMarkers();
         var cur = [];
-        var members = groupBy($scope.cache.items, 'member');
+        var members = cache.refreshMembers();
         members.forEach(function (g) {
           var pos = g.v.last();
           var member = g.k;
@@ -108,35 +123,28 @@ angular.module('quiApp')
 
         var mbm = _.difference(cur, old);
         // la presenza dell'utente corrente
-        var index = mbm.indexOf($scope.cache.user.nick);
-        if (index>=0){
+        var index = mbm.indexOf($scope.cache().user.nick);
+        if (index >= 0) {
           if (!_firstcenter)
             $scope.center();
-          mbm.splice(index,1);
+          mbm.splice(index, 1);
           _firstcenter = true;
-          if (!$scope.cache.welcomed)
+          if (!$scope.cache().welcomed)
             welcome();
         }
-        if (mbm.length>0)
+        if (mbm.length > 0)
           Logger.info('Si sono aggiunti nuovi membri!', mbm.join());
         mbm = _.difference(old, cur);
-        if (mbm.length>0)
+        if (mbm.length > 0)
           Logger.info('Alcuni membri sono usciti dal gruppo!', mbm.join());
 
         $scope.members = members;
       }
-      catch(err) { }
+      catch (err) {
+      }
     }
 
-    $scope.$watch(
-      function() { return JSON.stringify($scope.cache.items); },
-      function() { refreshMarkers() }
-    );
-
-    $scope.$watch(
-      function() { return JSON.stringify($scope.cache.messages); },
-      function() { $rootScope.$broadcast('SCROLLER-DOWN',{id:'scroller-msg'}); }
-    );
+    $rootScope.$on('GROUP', refreshMarkers);
 
     $scope.logout = function() {
       cache.leaveGroup(function() {
@@ -148,8 +156,8 @@ angular.module('quiApp')
     $scope.center = function(m) {
       if (!$scope.map) return;
       //u = u || $scope.user;
-      var member = m ? m.k : $scope.cache.user.nick;
-      var location = m ? m.v.last() : $scope.cache.pos;
+      var member = m ? m.k : $scope.cache().user.nick;
+      var location = m ? m.v.last() : $scope.cache().pos;
 
       if (amI(member) && !_firstcenter)
         _firstcenter = true;
@@ -221,6 +229,4 @@ angular.module('quiApp')
       };
       modalDetails(opt);
     };
-
-    refreshMarkers();
   }]);

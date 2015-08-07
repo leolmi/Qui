@@ -2,8 +2,9 @@
 'use strict';
 
 angular.module('quiApp')
-  .factory('cache', ['$http','socket','util','$timeout',function($http,socket,u,$timeout) {
-
+  .factory('cache', ['$rootScope','$http','socket','util','$timeout','groupByFilter',function($rootScope,$http,socket,u,$timeout,groupBy) {
+    var _stopwatchitems = undefined;
+    var _stopwatchmsg = undefined;
     var _product = {
       name: 'Ndo6',
       version: '1.0.4'
@@ -11,17 +12,9 @@ angular.module('quiApp')
     var _data = {
       ismodal: false
     };
-    function Infos() {
+    function EmptyPos() {
       return {
-        errors:[],
-        user:{},
-        group:{},
-        items:[],
-        messages:[],
-        current:[],
-        welcomed:false,
-        pos:{
-          latitude: null,
+        latitude: null,
           longitude: null,
           accuracy: null,
           altitude: null,
@@ -29,13 +22,27 @@ angular.module('quiApp')
           heading: null,
           speed: null,
           timestamp: null
-        },
+      };
+    }
+    function Infos() {
+      resetWatchers();
+      var infos = {
+        errors:[],
+        user:{},
+        group:{},
+        items:[],
+        messages:[],
+        current:[],
+        members:[],
+        welcomed:false,
+        pos:EmptyPos(),
         locationOptions:{
           enableHighAccuracy: true,
           timeout: 5000,
           maximumAge: 75000
         }
       };
+      return infos;
     }
     var _infos = Infos();
     var _active = false;
@@ -50,6 +57,24 @@ angular.module('quiApp')
           cb()
         });
       } else cb();
+    }
+
+    function initWatchers() {
+      _stopwatchitems = $rootScope.$watch(
+        function() { return JSON.stringify(_infos.items); },
+        function() { $rootScope.$broadcast('GROUP'); }
+      );
+      _stopwatchmsg = $rootScope.$watch(
+        function() { return JSON.stringify(_infos.messages); },
+        function() { $rootScope.$broadcast('SCROLLER-DOWN',{id:'scroller-msg'}); }
+      );
+    }
+
+    function resetWatchers() {
+      if (_stopwatchitems)
+        _stopwatchitems();
+      if (_stopwatchmsg)
+        _stopwatchmsg();
     }
 
     function reset() {
@@ -72,6 +97,7 @@ angular.module('quiApp')
           cb(err);
         });
     }
+
     function readGroup(cb) {
       cb = cb || angular.noop;
       $http.get('/api/group')
@@ -109,22 +135,52 @@ angular.module('quiApp')
       }
     }
 
+    /**
+     * Questa funzione permette di interpretare il risultato della geolocalizzazione
+     * e, al termine, eseguire una callback.
+     * @param cb
+     * @returns {Function}
+     */
+    function hresp(cb) {
+      cb = cb || angular.noop;
+      return function(resp) {
+        if (resp.code){
+          herror(resp);
+          cb();
+        }
+        else {
+          hposition(resp, cb);
+        }
+      }
+    }
+
+    /**
+     * Inizializza la cache
+     * @param g
+     * @param nick
+     * @param [cb]
+     * @param [welcomed]
+     */
     function init(g, nick, cb, welcomed) {
       cb = cb || angular.noop;
       _active = true;
+      _infos.pos = EmptyPos();
       _infos.group = g;
       _infos.welcomed = welcomed==true ? true : false;
       _infos.user = {
         nick: nick
       };
+      initWatchers();
       saveLocal();
       readMessages();
-      readGroup(function() {
-        readPosition();
-        cb();
+      var h = hresp(function() {
+        readGroup(cb);
       });
-
+      readPosition(h);
     }
+
+
+
 
     function check(o) {
       if (!o) return false;
@@ -201,13 +257,20 @@ angular.module('quiApp')
         pos.longitude==_infos.pos.longitude &&
         pos.altitude==_infos.pos.altitude);
     }
-    function hposition(xpos){
+    function hposition(xpos, cb){
+      cb = cb || angular.noop;
       var pos = Pos(xpos);
       if (!isTheSame(pos)) {
-        pushPos(pos, function() { readPositionTimeout(); });
+        pushPos(pos, function() {
+          cb();
+          readPositionTimeout();
+        });
         keepValues(_infos.pos, pos);
       }
-      else readPositionTimeout();
+      else {
+        cb();
+        readPositionTimeout();
+      }
     }
 
     function herror(err, noread){
@@ -218,19 +281,29 @@ angular.module('quiApp')
 
     function readPositionTimeout() {
       if (_active)
-        $timeout( function(){ readPosition(); }, 1000, false);
+        $timeout( function(){ readPosition(hposition, herror); }, 1000, false);
     }
 
-    function readPosition() {
+    /**
+     * Effettua la richiesta di geolocalizzazione
+     * @param hpos
+     * @param [herr]
+     */
+    function readPosition(hpos, herr) {
       if (!_active) return;
+      herr = herr || hpos;
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(hposition, herror, _infos.locationOptions);
+        navigator.geolocation.getCurrentPosition(hpos, herr, _infos.locationOptions);
       }
       else {
         _infos.errors.push("Geolocation is not supported by this browser.");
       }
     }
 
+    function refreshMembers() {
+      _infos.members = groupBy(_infos.items, 'member');
+      return _infos.members;
+    }
 
     function testGeo(cb) {
       cb = cb || angular.noop;
@@ -263,17 +336,20 @@ angular.module('quiApp')
     loadLocal();
 
     return {
-      update:saveLocal,
-      testGeo:testGeo,
-      data:_data,
-      product:_product,
-      infos: function() { return _infos; },
-      reset:reset,
-      init:init,
-      invite:invite,
-      getInfos:getInfos,
-      pushPos:pushPos,
-      pushMsg:pushMsg,
-      leaveGroup:leaveGroup
+      update: saveLocal,
+      testGeo: testGeo,
+      data: _data,
+      product: _product,
+      infos: function () {
+        return _infos;
+      },
+      reset: reset,
+      init: init,
+      invite: invite,
+      getInfos: getInfos,
+      pushPos: pushPos,
+      pushMsg: pushMsg,
+      leaveGroup: leaveGroup,
+      refreshMembers: refreshMembers
     };
   }]);

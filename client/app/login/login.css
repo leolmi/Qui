@@ -15,18 +15,6 @@
   text-rendering: optimizeLegibility;
 }
 
-.fa-jump {
-  -webkit-animation: jump 2s infinite;
-  animation: jump 2s infinite;
-
-  -webkit-transform-origin: center bottom;
-  transform-origin: center bottom;
-}
-
-.fa-jump:hover {
-  -webkit-animation: pendular 5s ease-in-out infinite;
-  animation: pendular 5s ease-in-out infinite;
-}
 
 .help-block {
   color: cadetblue;

@@ -1,7 +1,10 @@
+<div class="working-container" ng-show="loading">
+  <div class="working"></div>
+</div>
 <div id="map-canvas"></div>
-<div class="monitor shadow">
+<div class="monitor">
   <section class="section user" ng-class="{'active':page=='user'}">
-    <div class="title"><i class="fa fa-fw fa-user"></i> {{cache.user.nick}}</div>
+    <div class="title"><i class="fa fa-fw fa-user"></i> {{cache().user.nick}}</div>
     <div class="info" ng-show="mypos">
       <div ng-repeat="i in mypos">{{i.title}}: {{i.value}}{{i.post}}</div>
     </div>
@@ -11,11 +14,11 @@
     <div class="title"><i class="fa fa-fw fa-comments"></i> Chat</div>
     <div class="chat-container" scroller="scroller-msg">
       <div class="messages-container scroller-target">
-        <div class="chat-message" ng-class="{'by-me':m.member==cache.user.nick}" ng-repeat="m in cache.messages">
+        <div class="chat-message" ng-class="{'by-me':m.member==cache().user.nick}" ng-repeat="m in cache().messages">
           <div class="chat-msg-header">
-            <i class="fa fa-caret-right" ng-show="m.member==cache.user.nick"></i>
-            {{getDate(m.timestamp,'time-small')}} - {{m.member==cache.user.nick ? 'IO' : m.member}}
-            <i class="fa fa-caret-left" ng-hide="m.member==cache.user.nick"></i>
+            <i class="fa fa-caret-right" ng-show="m.member==cache().user.nick"></i>
+            {{getDate(m.timestamp,'time-small')}} - {{m.member==cache().user.nick ? 'IO' : m.member}}
+            <i class="fa fa-caret-left" ng-hide="m.member==cache().user.nick"></i>
           </div>
           {{m.text}}
         </div>
@@ -29,7 +32,7 @@
     </div>
   </section>
   <section class="section group" ng-class="{'active':page=='group'}">
-    <div class="title"><i class="fa fa-fw fa-users"></i> {{cache.group.group}} ({{members ? members.length : 0}})</div>
+    <div class="title"><i class="fa fa-fw fa-users"></i> {{cache().group.group}} ({{members ? members.length : 0}})</div>
     <div class="others-container" scroller>
       <div class="others scroller-target" ng-show="members && members.length">
         <div class="user-item aslink" ng-repeat="m in members" ng-click="center(m)">

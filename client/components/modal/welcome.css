@@ -1,0 +1,33 @@
+.welcome-header {
+  position: relative;
+  background-color: yellowgreen;
+  padding: 0 40px;
+  border-radius: 25px;
+}
+.welcome-header > i {
+  font-size: 32px;
+}
+.welcome-header > * {
+  display: inline-block;
+}
+
+.member > span {
+  font-size: 10px;
+  color: #aaa;
+  text-align: right;
+  margin-right: 10px;
+}
+
+.welcome-word {
+  margin-left: 30px;
+  font-size: 24px;
+}
+
+.info-title {
+  font-weight: bold;
+  margin: 20px 6px 10px;
+}
+
+.legacy {
+  font-size: 11px;
+}

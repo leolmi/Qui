@@ -1,4 +1,4 @@
-<div class="modal-header">
+<div class="modal-header" ng-show="modal.show.header">
   <button ng-if="modal.dismissable" type="button" ng-click="$dismiss()" class="close">&times;</button>
   <h4 ng-if="modal.title" ng-bind="modal.title" class="modal-title"></h4>
 </div>
@@ -7,6 +7,6 @@
   <div ng-if="modal.html" ng-bind-html="modal.html"></div>
   <div ng-if="modal.template" ng-include="modal.template"></div>
 </div>
-<div class="modal-footer">
+<div class="modal-footer" ng-show="modal.show.footer">
   <button ng-repeat="button in modal.buttons" ng-class="button.classes" ng-click="button.click($event)" ng-bind="button.text" class="btn"></button>
 </div>

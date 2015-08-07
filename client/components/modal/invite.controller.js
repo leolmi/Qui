@@ -6,5 +6,4 @@ angular.module('quiApp')
   .controller('InviteCtrl', ['$scope','cache', function ($scope, cache) {
     //TODO: mostra la finestra di invito al gruppo.
 
-
   }]);

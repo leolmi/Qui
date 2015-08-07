@@ -4,7 +4,9 @@
 
 angular.module('quiApp')
   .controller('WelcomeCtrl', ['$scope','cache', function ($scope, cache) {
-    //TODO: mostra la finestra di benvenuto nel gruppo.
-
-
+    $scope.product = cache.product;
+    $scope.infos = cache.infos();
+    $scope.legacy = ['Entrando nel gruppo condividi posizione e messaggi, questi dati saranno momentaneamente storicizzati '+
+      'sul server e saranno visibili a tutti i membri dl gruppo.',
+      ' Se non desideri condividere tali informazioni puoi uscire dal gruppo e tutti i dati saranno automaticamente rimossi dal server'];
   }]);

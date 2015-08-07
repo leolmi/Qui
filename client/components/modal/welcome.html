@@ -1,4 +1,14 @@
 <div ng-controller="WelcomeCtrl">
-  <p>Corpo del form di welcome....</p>
-  <p>1 dfgsfdgdfsgsdfg sdfgsdf</p>
+  <div class="welcome-header">
+    <i class="fa fa-map-marker fa-jump-jump"></i>
+    <h1> {{product.name}}</h1>
+    <p> v.{{product.version}}</p>
+    <p class="welcome-word"> benvenuto!</p>
+  </div>
+  <h4>Membri del gruppo <strong>{{infos.group.group}}</strong>:</h4>
+  <div class="member" ng-repeat="m in infos.members">
+    <span>{{$index+1}}</span><i class="fa fa-user" ></i> {{m.k}}  ({{m.k[0]}})
+  </div>
+  <div class="info-title">Informazioni sui dati</div>
+  <div class="legacy" ng-repeat="l in legacy">{{l}}</div>
 </div>
