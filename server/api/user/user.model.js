@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
+var group = require('../group/group.controller');
 
 var UserSchema = new Schema({
   group: String,
@@ -81,6 +82,7 @@ UserSchema
       respond(true);
     });
 }, 'The specified group is already in use.');
+
 
 var validatePresenceOf = function(value) {
   return value && value.length;

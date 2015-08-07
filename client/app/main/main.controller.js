@@ -118,7 +118,7 @@ angular.module('quiApp')
           }));
           cur.push(member);
           if (amI(member))
-            $scope.mypos = cache.getInfos(pos);
+            $scope.mypos = cache.getInfos(pos, 'time');
         });
 
         var mbm = _.difference(cur, old);

@@ -16,6 +16,7 @@ angular.module('quiApp')
     function openModal(scope, modalClass) {
       var modalScope = $rootScope.$new();
       scope = scope || {};
+      scope.product = cache.product;
       modalClass = modalClass || 'modal-default';
 
       angular.extend(modalScope, scope);

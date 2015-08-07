@@ -62,6 +62,13 @@
   border-radius: 0;
 }
 
+.modal-product {
+  position: absolute;
+  font-size: 11px;
+  bottom: 20px;
+  color: #aaa;
+}
+
 @media (max-width: 500px) {
   .modal-dialog {
     margin: 0;

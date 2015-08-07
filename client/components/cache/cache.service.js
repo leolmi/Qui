@@ -60,14 +60,16 @@ angular.module('quiApp')
     }
 
     function initWatchers() {
-      _stopwatchitems = $rootScope.$watch(
-        function() { return JSON.stringify(_infos.items); },
-        function() { $rootScope.$broadcast('GROUP'); }
-      );
-      _stopwatchmsg = $rootScope.$watch(
-        function() { return JSON.stringify(_infos.messages); },
-        function() { $rootScope.$broadcast('SCROLLER-DOWN',{id:'scroller-msg'}); }
-      );
+      if (!_stopwatchitems)
+        _stopwatchitems = $rootScope.$watch(
+          function() { return JSON.stringify(_infos.items); },
+          function() { $rootScope.$broadcast('GROUP'); }
+        );
+      if (!_stopwatchmsg)
+        _stopwatchmsg = $rootScope.$watch(
+          function() { return JSON.stringify(_infos.messages); },
+          function() { $rootScope.$broadcast('SCROLLER-DOWN',{id:'scroller-msg'}); }
+        );
     }
 
     function resetWatchers() {
@@ -223,16 +225,16 @@ angular.module('quiApp')
       });
     }
 
-    function getInfos(pos) {
+    function getInfos(pos, format) {
       var infos = [];
       addInfo(infos, 'Latitudine', pos.latitude, '\'');
       addInfo(infos, 'Longitudine', pos.longitude, '\'');
-      addInfo(infos, 'Scarto', pos.accuracy, 'm');
+      addInfo(infos, 'Accuratezza', pos.accuracy, 'm');
       addInfo(infos, 'Altezza', pos.altitude, 'm');
       addInfo(infos, 'Precisione Altezza', pos.altitudeAccuracy, 'm');
       addInfo(infos, 'Declinazione', pos.heading, '°');
       addInfo(infos, 'Velocità', pos.speed, 'm/s');
-      addInfo(infos, 'Data Rilevazione', u.getDate(pos.timestamp), '');
+      addInfo(infos, 'Rilevazione', u.getDate(pos.timestamp, format), '');
       return infos;
     }
 
@@ -332,6 +334,9 @@ angular.module('quiApp')
         sender: u.nick
       });
     }
+
+
+
 
     loadLocal();
 

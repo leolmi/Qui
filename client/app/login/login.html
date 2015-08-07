@@ -3,14 +3,18 @@
 <header class="hero-unit">
   <i class="fa fa-map-marker fa-jump"></i>
   <div class="login-title">
-    <p ng-show="onnewgroup">Crea un nuovo gruppo</p>
-    <p ng-hide="onnewgroup">Accedi ad un gruppo esistente</p>
-    <p>per condividere messaggi e posizione</p>
+    <p ng-show="loading">Accesso in corso...</p>
+    <p ng-show="onnewgroup && !loading">Crea un nuovo gruppo</p>
+    <p ng-hide="onnewgroup || loading">Accedi ad un gruppo esistente</p>
+    <p ng-hide="loading">per condividere messaggi e posizione</p>
   </div>
 </header>
 
-<div>
-  <div class="login-form" ng-class="{'login-access':!loginform}">
+<div class="login-content">
+  <div class="working-container" ng-show="loading">
+    <div class="working"></div>
+  </div>
+  <div class="login-form" ng-class="{'login-access':!loginform}" ng-hide="loading">
     <form class="form" name="formlgn" ng-submit="login(formlgn)" novalidate>
       <div class="row">
         <div class="col-sm-6">

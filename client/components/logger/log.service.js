@@ -16,6 +16,7 @@ angular.module('quiApp')
           warning: 'toast-warning'
         },
         messageClass: 'toast-message',
+        preventDuplicates: true,
         positionClass: 'toast-bottom-right',
         tapToDismiss: true,
         timeOut: 5000,

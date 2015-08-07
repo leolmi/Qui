@@ -4,6 +4,11 @@
 var _ = require('lodash');
 var Chat = require('./chat.model');
 
+
+function handleError(res, err) {
+  return res.send(500, err);
+}
+
 // Get list of chat message
 exports.index = function(req, res) {
   var filter = {

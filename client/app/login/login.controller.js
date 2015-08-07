@@ -22,11 +22,12 @@ angular.module('quiApp')
       }
     };
   }])
-  .controller('LoginGroupCtrl', ['$scope','$rootScope','$timeout','Auth','$location','cache','Logger', function ($scope,$rootScope,$timeout,Auth,$location,cache,Logger) {
+  .controller('LoginGroupCtrl', ['$scope','$http','$rootScope','$timeout','Auth','$location','cache','Logger', function ($scope,$http,$rootScope,$timeout,Auth,$location,cache,Logger) {
     $scope.product = cache.product;
     $scope.errors = {};
     $scope.user = {};
     cache.reset();
+    $scope.loading = false;
     $scope.onnewgroup = false;
 
     /**
@@ -52,9 +53,11 @@ angular.module('quiApp')
      */
     function beginSubmit(newgroup, cb) {
       cb = cb || angular.noop;
+      $scope.loading = true;
       $scope.errors = {};
       cache.testGeo(function (result) {
         if (result.code) {
+          $scope.loading = false;
           Logger.error('Errore sulla richiesta di geolocalizzazione', result.message);
         }
         else {
@@ -66,14 +69,34 @@ angular.module('quiApp')
     }
 
     /**
+     * Verifica che il nick non sia già utilizzato nel gruppo
+     * @param group
+     * @param cb
+     */
+    function checkMember(group, cb) {
+      $http.post('/api/group/check', {group:group._id, member:$scope.user.nick})
+        .success(function() { cb(true) })
+        .error(function(){ cb(false); });
+    }
+
+    /**
      * reindirizza alla pagina principale dopo
      * aver verificato l'utente ed inizializzato la cache
      */
     function goMain() {
       Auth.isLoggedInAsync(function () {
         var group = Auth.getCurrentUser();
-        cache.init(group, $scope.user.nick, function () {
-          $location.path('/main');
+        checkMember(group, function(valid) {
+          if (valid) {
+            cache.init(group, $scope.user.nick, function () {
+              $scope.loading = false;
+              $location.path('/main');
+            });
+          }
+          else {
+            $scope.errors.other = 'Il soprannome sembra essere già utilizzato nel gruppo';
+            $scope.loading = false;
+          }
         });
       });
     }
@@ -90,12 +113,15 @@ angular.module('quiApp')
             password: $scope.user.password
           })
             .then(function () {
-              // Logged in, redirect to main
               goMain();
             })
             .catch(function (err) {
               $scope.errors.other = err.message;
+              $scope.loading = false;
             });
+        }
+        else {
+          $scope.loading = false;
         }
       });
     };

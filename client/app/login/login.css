@@ -1,3 +1,29 @@
+.login-form {
+  width: 500px;
+  margin-left: calc(50% - 250px);
+  padding: 0 40px 20px;
+  left: 0;
+  position: absolute;
+  color: #222;
+  -moz-transition: all 1.50s ease-in-out;
+  -o-transition: all 1.50s ease-in-out;
+  -webkit-transition: all 1.50s ease-in-out;
+  transition: all 1.50s ease-in-out;
+}
+
+.login-content > .working-container {
+  top: auto;
+  width: 500px;
+  margin-left: calc(50% - 250px);
+  background-color: transparent;
+}
+.login-content > .working-container > .working {
+  top: 0;
+  position: absolute;
+}
+
+
+
 .login-form .form-control {
   /*height: 30px;*/
   padding: 0 12px;
@@ -61,18 +87,7 @@
   text-rendering: optimizeLegibility;
 }
 
-.login-form {
-  width: 500px;
-  margin-left: calc(50% - 250px);
-  padding: 0 40px 20px;
-  left: 0;
-  position: absolute;
-  color: #222;
-  -moz-transition: all 1.50s ease-in-out;
-  -o-transition: all 1.50s ease-in-out;
-  -webkit-transition: all 1.50s ease-in-out;
-  transition: all 1.50s ease-in-out;
-}
+
 .recover-tool {
   position: absolute;
   right: 50px;

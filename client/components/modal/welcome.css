@@ -1,6 +1,6 @@
 .welcome-header {
   position: relative;
-  background-color: yellowgreen;
+  background: yellowgreen url('../../../assets/images/bg.jpg') no-repeat;
   padding: 0 40px;
   border-radius: 25px;
 }

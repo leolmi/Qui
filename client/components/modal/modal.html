@@ -8,5 +8,6 @@
   <div ng-if="modal.template" ng-include="modal.template"></div>
 </div>
 <div class="modal-footer" ng-show="modal.show.footer">
+  <div class="modal-product">{{product.name}} v.{{product.version}}</div>
   <button ng-repeat="button in modal.buttons" ng-class="button.classes" ng-click="button.click($event)" ng-bind="button.text" class="btn"></button>
 </div>
