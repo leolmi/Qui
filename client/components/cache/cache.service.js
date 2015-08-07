@@ -3,8 +3,6 @@
 
 angular.module('quiApp')
   .factory('cache', ['$rootScope','$http','socket','util','$timeout','groupByFilter',function($rootScope,$http,socket,u,$timeout,groupBy) {
-    var _stopwatchitems = undefined;
-    var _stopwatchmsg = undefined;
     var _product = {
       name: 'Ndo6',
       version: '1.0.4'
@@ -25,7 +23,7 @@ angular.module('quiApp')
       };
     }
     function Infos() {
-      resetWatchers();
+      //resetWatchers();
       var infos = {
         errors:[],
         user:{},
@@ -59,26 +57,9 @@ angular.module('quiApp')
       } else cb();
     }
 
-    function initWatchers() {
-      if (!_stopwatchitems)
-        _stopwatchitems = $rootScope.$watch(
-          function() { return JSON.stringify(_infos.items); },
-          function() { $rootScope.$broadcast('GROUP'); }
-        );
-      if (!_stopwatchmsg)
-        _stopwatchmsg = $rootScope.$watch(
-          function() { return JSON.stringify(_infos.messages); },
-          function() { $rootScope.$broadcast('SCROLLER-DOWN',{id:'scroller-msg'}); }
-        );
-    }
-
-    function resetWatchers() {
-      if (_stopwatchitems)
-        _stopwatchitems();
-      if (_stopwatchmsg)
-        _stopwatchmsg();
-    }
-
+    /**
+     * Resetta la cache
+     */
     function reset() {
       _active = false;
       _infos = Infos();
@@ -87,6 +68,10 @@ angular.module('quiApp')
       socket.unsyncUpdates('chat');
     }
 
+    /**
+     * Legge i messaggi della chat dal server
+     * @param [cb]
+     */
     function readMessages(cb) {
       cb = cb || angular.noop;
       $http.get('/api/chat')
@@ -100,6 +85,10 @@ angular.module('quiApp')
         });
     }
 
+    /**
+     * Legge le posizioni rilevate nel gruppo
+     * @param [cb]
+     */
     function readGroup(cb) {
       cb = cb || angular.noop;
       $http.get('/api/group')
@@ -113,7 +102,9 @@ angular.module('quiApp')
         });
     }
 
-
+    /**
+     * Salva i dati utente sullo store locale
+     */
     function saveLocal() {
       var linfo = {
         group: _infos.group,
@@ -124,6 +115,9 @@ angular.module('quiApp')
       localStorage.setItem("QUI-STORE", content);
     }
 
+    /**
+     * Carica i dati utente dallo store locale
+     */
     function loadLocal() {
       var content = localStorage.getItem("QUI-STORE");
       if (!content || content.length <= 0) return;
@@ -172,7 +166,6 @@ angular.module('quiApp')
       _infos.user = {
         nick: nick
       };
-      initWatchers();
       saveLocal();
       readMessages();
       var h = hresp(function() {
@@ -181,9 +174,11 @@ angular.module('quiApp')
       readPosition(h);
     }
 
-
-
-
+    /**
+     * Valida l'oggetto assegnandogli il gruppo ed il membro
+     * @param o
+     * @returns {boolean}
+     */
     function check(o) {
       if (!o) return false;
       o.group = _infos.group._id;
@@ -191,7 +186,12 @@ angular.module('quiApp')
       return true;
     }
 
-
+    /**
+     * Invia i dati posizionali
+     * @param pos
+     * @param [cb]
+     * @returns {*}
+     */
     function pushPos(pos, cb){
       cb = cb || angular.noop;
       if (!check(pos)) return cb();
@@ -200,6 +200,12 @@ angular.module('quiApp')
         .error(function(err){ cb(err); });
     }
 
+    /**
+     * Invia il messagio della chat
+     * @param txt
+     * @param [cb]
+     * @returns {*}
+     */
     function pushMsg(txt, cb){
       cb = cb || angular.noop;
       if (!txt) return;
@@ -213,18 +219,23 @@ angular.module('quiApp')
         .error(function(err){ cb(err); });
     }
 
+    /**
+     * Aggiunge la voce di geolocalizzazione se ha un valore
+     * @param arr
+     * @param title
+     * @param value
+     * @param post
+     */
     function addInfo(arr, title, value, post) {
       if (value != undefined)
         arr.push({title: title, value: value, post: post});
     }
-
-    function keepValues(t, s) {
-      _.keys(t).forEach(function(pn){
-        if (_.has(s, pn))
-          t[pn] = s[pn];
-      });
-    }
-
+    /**
+     * restituisce un array con le info di geolocalizzazione valorizzate
+     * @param pos
+     * @param [format]
+     * @returns {Array}
+     */
     function getInfos(pos, format) {
       var infos = [];
       addInfo(infos, 'Latitudine', pos.latitude, '\'');
@@ -238,6 +249,12 @@ angular.module('quiApp')
       return infos;
     }
 
+    /**
+     * Restituisce un oggetto con i valori di geolocalizzazione
+     * @param xpos
+     * @returns {{latitude: Number, longitude: Number, accuracy: Number, altitude: Number, altitudeAccuracy: Number, heading: Number, speed: Number, timestamp: (null|*|Document.timestamp|Number)}}
+     * @constructor
+     */
     function Pos(xpos) {
       return {
         latitude: xpos.coords.latitude,
@@ -252,13 +269,35 @@ angular.module('quiApp')
     }
 
 
+    /**
+     * Legge i valori delle proprietà corrispondenti
+     * @param t
+     * @param s
+     */
+    function keepValues(t, s) {
+      _.keys(t).forEach(function(pn){
+        if (_.has(s, pn))
+          t[pn] = s[pn];
+      });
+    }
 
+    /**
+     * Restituisce vero se corrisponde alla posizione attuale
+     * @param pos
+     * @returns {boolean}
+     */
     function isTheSame(pos) {
       return (
         pos.latitude==_infos.pos.latitude &&
         pos.longitude==_infos.pos.longitude &&
         pos.altitude==_infos.pos.altitude);
     }
+
+    /**
+     * Gestisce i dati posizionali
+     * @param xpos
+     * @param [cb]
+     */
     function hposition(xpos, cb){
       cb = cb || angular.noop;
       var pos = Pos(xpos);
@@ -275,12 +314,20 @@ angular.module('quiApp')
       }
     }
 
+    /**
+     * Gestisce l'errore nella rilevazione dei dati posizionali
+     * @param err
+     * @param noread
+     */
     function herror(err, noread){
       _infos.errors.push(err.message);
       if (!noread)
         readPositionTimeout();
     }
 
+    /**
+     * Legge i dati posizionali dopo 1 sec.
+     */
     function readPositionTimeout() {
       if (_active)
         $timeout( function(){ readPosition(hposition, herror); }, 1000, false);
@@ -302,11 +349,20 @@ angular.module('quiApp')
       }
     }
 
+    /**
+     * Aggiorna l'elenco dei membri del gruppo
+     * @returns {*}
+     */
     function refreshMembers() {
       _infos.members = groupBy(_infos.items, 'member');
       return _infos.members;
     }
 
+    /**
+     * Verifica la possibilità di ottenere i dati posizionali
+     * @param [cb]
+     * @returns {*}
+     */
     function testGeo(cb) {
       cb = cb || angular.noop;
       if (!navigator.geolocation)
@@ -314,6 +370,12 @@ angular.module('quiApp')
       navigator.geolocation.getCurrentPosition(cb, cb);
     }
 
+    /**
+     * Invia un invito a tutte le mail presenti nel testo passato
+     * da parte del membro u
+     * @param str
+     * @param u
+     */
     function invite(str, u) {
       if (!str) return;
       var mails = [];
@@ -334,8 +396,6 @@ angular.module('quiApp')
         sender: u.nick
       });
     }
-
-
 
 
     loadLocal();

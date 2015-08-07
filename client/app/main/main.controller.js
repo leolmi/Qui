@@ -68,6 +68,22 @@ angular.module('quiApp')
       checkErrors();
     });
 
+    var _stopwatchitems = $scope.$watch(
+      function () { return JSON.stringify($scope.cache().items); },
+      function () { refreshMarkers(); });
+
+    var _stopwatchmsg = $scope.$watch(
+      function () { return JSON.stringify($scope.cache().messages); },
+      function () { $rootScope.$broadcast('SCROLLER-DOWN', {id: 'scroller-msg'}); });
+
+    function resetWatchers() {
+      if (_stopwatchitems)
+        _stopwatchitems();
+      _stopwatchitems = null;
+      if (_stopwatchmsg)
+        _stopwatchmsg();
+      _stopwatchmsg = null;
+    }
 
     function checkErrors() {
       if ($scope.error)
@@ -144,14 +160,18 @@ angular.module('quiApp')
       }
     }
 
-    $rootScope.$on('GROUP', refreshMarkers);
-
     $scope.logout = function() {
+      resetWatchers();
       cache.leaveGroup(function() {
         Auth.logout();
         $location.path('/login');
       });
     };
+
+    $scope.$on('$destroy',function() {
+      resetWatchers();
+    });
+
 
     $scope.center = function(m) {
       if (!$scope.map) return;
