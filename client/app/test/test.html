@@ -1,0 +1,20 @@
+<div class="background"></div>
+
+<header class="hero-unit">
+  <i class="fa fa-map-marker fa-jump"></i>
+  <div class="login-title">
+    <p>Pagina di test</p>
+  </div>
+</header>
+
+
+<div class="test-items" scroller scroller-color="yellowgreen" scroller-width="12">
+  <div class="test-items-container scroller-target">
+    <div class="test-item" ng-repeat="i in items">{{i}}</div>
+  </div>
+</div>
+
+<div class="test-buttons">
+  <i class="fa aslink" ng-repeat="b in buttons" ng-class="b.icon" ng-click="b.action()"></i>
+  <!--<i class="fa fa-plus-circle aslink" ng-click="add()"></i>-->
+</div>

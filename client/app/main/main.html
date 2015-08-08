@@ -14,13 +14,15 @@
     <div class="title"><i class="fa fa-fw fa-comments"></i> Chat</div>
     <div class="chat-container" scroller="scroller-msg">
       <div class="messages-container scroller-target">
-        <div class="chat-message" ng-class="{'by-me':m.member==cache().user.nick}" ng-repeat="m in cache().messages">
-          <div class="chat-msg-header">
-            <i class="fa fa-caret-right" ng-show="m.member==cache().user.nick"></i>
-            {{getDate(m.timestamp,'time-small')}} - {{m.member==cache().user.nick ? 'IO' : m.member}}
-            <i class="fa fa-caret-left" ng-hide="m.member==cache().user.nick"></i>
+        <div class="chat-panel" ng-class="{'by-me':m.member==cache().user.nick}" ng-repeat="m in cache().messages">
+          <div class="chat-message">
+            <div class="chat-msg-header">
+              <!--<i class="fa fa-caret-right" ng-show="m.member==cache().user.nick"></i>-->
+              {{getDate(m.timestamp,'time')}} - {{m.member==cache().user.nick ? 'IO' : m.member}}
+              <!--<i class="fa fa-caret-left" ng-hide="m.member==cache().user.nick"></i>-->
+            </div>
+            {{m.text}}
           </div>
-          {{m.text}}
         </div>
       </div>
     </div>

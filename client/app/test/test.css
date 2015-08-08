@@ -1,0 +1,29 @@
+.test-items {
+  color: #ccc;
+  background-color: #333;
+  height: 100px;
+  width: 100%;
+}
+
+.test-buttons {
+  position: fixed;
+  bottom: 20px;
+  color: #222;
+  padding: 20px;
+  font-size: 32px;
+}
+.test-buttons > i {
+  margin: 0 8px;
+}
+.test-item {
+  width: 200px;
+  height: 24px;
+  padding: 4px 10px;
+  margin: 2px;
+  background-color: #003399;
+  border-radius: 4px;
+}
+
+.test-items-container {
+  background-color: yellowgreen;
+}

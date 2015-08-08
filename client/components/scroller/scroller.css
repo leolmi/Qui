@@ -1,11 +1,15 @@
+*[scroller] {
+  overflow: hidden;
+}
+
 .scroller {
   top: 0;
   right: 0;
   opacity: .4;
   background-color: #222;
   border-radius: 3px;
-  margin: 1px;
-  width: 6px;
+  /*margin: 1px;*/
+  /*width: 6px;*/
   position: absolute;
   cursor: pointer;
   z-index: 10000;

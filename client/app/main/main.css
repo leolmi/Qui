@@ -79,82 +79,11 @@
   width: 200px;
   /*background-color: #ba9d37;*/
 }
-.others {
-  width: calc(100% - 20px);
-}
-
-.others-container {
-  position: absolute;
-  height: 120px;
-  width: 100%;
-  left: 0;
-  padding: 10px;
-  overflow: hidden;
-}
 
 .monitor > footer > .btn-hidden {
   display: none;
   margin-top: 6px;
 }
-
-.user-item {
-  padding: 3px 14px;
-  /*border: #ccc 1px solid;*/
-  border-radius: 6px;
-  margin: 1px;
-  position: relative;
-}
-.user-item:hover {
-  background-color: darkolivegreen;
-  color: white;
-}
-
-.user-item > span {
-  position: absolute;
-  left: 2px;
-  top: 6px;
-  font-size: 10px;
-}
-
-.chat-container {
-  overflow: hidden;
-  height: 120px;
-  width: 100%;
-  left: 0;
-  padding: 10px;
-}
-.chat-message {
-  text-align: right;
-  border-bottom: #ccc 1px solid;
-  color: orangered;
-  font-size: 12px;
-  position: relative;
-}
-.chat-message.by-me {
-  text-align: left;
-  color: royalblue;
-}
-.chat-msg-header {
-  font-size: 9px;
-  color: #777;
-}
-.chat-msg-header > i {
-  font-size: 16px;
-}
-.chat-message.by-me > .chat-msg-header > i {
-  left: 2px;
-}
-.messages-container {
-  width: calc(100% - 20px);
-}
-
-.chat-text {
-  position: absolute;
-  bottom: -34px;
-  width: calc(100% - 20px);
-  z-index: 100;
-}
-
 
 
 

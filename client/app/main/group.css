@@ -1,0 +1,40 @@
+.others {
+  width: calc(100% - 20px);
+}
+
+.others-container {
+  position: absolute;
+  height: 120px;
+  width: 100%;
+  left: 0;
+  padding: 10px;
+  overflow: hidden;
+}
+
+
+.user-item {
+  padding: 3px 14px;
+  /*border: #ccc 1px solid;*/
+  border-radius: 6px;
+  margin: 1px;
+  position: relative;
+}
+.user-item:hover {
+  background-color: darkolivegreen;
+  color: white;
+}
+
+.user-item > span {
+  position: absolute;
+  left: 2px;
+  top: 6px;
+  font-size: 10px;
+}
+.user-item >i:hover {
+  color: darkorange;
+}
+.user-item >i.onright {
+  margin-top: 2px;
+  font-size: 18px;
+}
+
