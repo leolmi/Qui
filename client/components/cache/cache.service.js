@@ -2,7 +2,27 @@
 'use strict';
 
 angular.module('quiApp')
+  .filter('groupBy', [function() {
+    return function (list, field, type) {
+      var filtered = [];
+      type = type || 'member';
+      list.forEach(function (item) {
+        if (item.type==type) {
+          var ex = _.find(filtered, function (o) {
+            return o.k == item[field];
+          });
+          if (ex)
+            ex.v.push(item);
+          else
+            filtered.push({k: item[field], v: [item]});
+        }
+      });
+      return filtered;
+    };
+  }])
   .factory('cache', ['$rootScope','$http','socket','util','$timeout','groupByFilter',function($rootScope,$http,socket,u,$timeout,groupBy) {
+    var TYPE_MEMEBER = 'member';
+    var TYPE_POINT = 'point';
     var _product = {
       name: 'Ndo6',
       version: '1.0.4'
@@ -13,17 +33,16 @@ angular.module('quiApp')
     function EmptyPos() {
       return {
         latitude: null,
-          longitude: null,
-          accuracy: null,
-          altitude: null,
-          altitudeAccuracy: null,
-          heading: null,
-          speed: null,
-          timestamp: null
+        longitude: null,
+        accuracy: null,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        speed: null,
+        timestamp: null
       };
     }
     function Infos() {
-      //resetWatchers();
       var infos = {
         errors:[],
         user:{},
@@ -32,6 +51,7 @@ angular.module('quiApp')
         messages:[],
         current:[],
         members:[],
+        points:[],
         welcomed:false,
         pos:EmptyPos(),
         locationOptions:{
@@ -177,12 +197,15 @@ angular.module('quiApp')
     /**
      * Valida l'oggetto assegnandogli il gruppo ed il membro
      * @param o
+     * @param type
      * @returns {boolean}
      */
-    function check(o) {
+    function check(o, type) {
       if (!o) return false;
+      type = type || TYPE_MEMEBER;
       o.group = _infos.group._id;
       o.member = _infos.user.nick;
+      if(!o.type) o.type = type;
       return true;
     }
 
@@ -198,6 +221,22 @@ angular.module('quiApp')
       $http.post('/api/group', pos)
         .success(function(item){ cb(null, item) })
         .error(function(err){ cb(err); });
+    }
+
+    /**
+     * Condivide una posizione
+     * @param pos
+     * @param desc
+     * @param cb
+     * @returns {*}
+     */
+    function sharePos(pos, cb) {
+      cb = cb || angular.noop;
+      if (!check(pos, TYPE_POINT)) return cb();
+      pushPos(pos, function () {
+        cb();
+        readPositionTimeout();
+      });
     }
 
     /**
@@ -353,8 +392,9 @@ angular.module('quiApp')
      * Aggiorna l'elenco dei membri del gruppo
      * @returns {*}
      */
-    function refreshMembers() {
-      _infos.members = groupBy(_infos.items, 'member');
+    function refreshItems() {
+      _infos.members = groupBy(_infos.items, 'member', TYPE_MEMEBER);
+      _infos.points = _.filter(_infos.items, function(i) { return i.type==TYPE_POINT; });
       return _infos.members;
     }
 
@@ -401,6 +441,8 @@ angular.module('quiApp')
     loadLocal();
 
     return {
+      TYPE_MEMEBER:TYPE_MEMEBER,
+      TYPE_POINT:TYPE_POINT,
       update: saveLocal,
       testGeo: testGeo,
       data: _data,
@@ -412,9 +454,10 @@ angular.module('quiApp')
       init: init,
       invite: invite,
       getInfos: getInfos,
-      pushPos: pushPos,
+      //pushPos: pushPos,
       pushMsg: pushMsg,
+      sharePos:sharePos,
       leaveGroup: leaveGroup,
-      refreshMembers: refreshMembers
+      refreshMembers: refreshItems
     };
   }]);

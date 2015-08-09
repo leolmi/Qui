@@ -85,8 +85,9 @@
   margin-top: 6px;
 }
 
-
-
+.working-container.main {
+  height: 100%;
+}
 
 @media (max-width: 700px) {
   .monitor > footer > .btn-hidden {

@@ -4,9 +4,11 @@ angular.module('quiApp')
   .factory('Modal', ['$rootScope','$modal','cache',function ($rootScope,$modal,cache) {
     var modal_DELETE = 'delete';
     var modal_YESNOCANCEL = 'yesnocancel';
+
     var template_WELCOME = 'welcome';
     var template_INVITE = 'invite';
     var template_MEMBERINFO = 'memberinfo';
+    var template_POINT = 'point';
     /**
      * Opens a modal
      * @param  {Object} scope      - an object to be merged with modal's scope
@@ -41,6 +43,7 @@ angular.module('quiApp')
       TEMPLATE_WELCOME:template_WELCOME,
       TEMPLATE_INVITE:template_INVITE,
       TEMPLATE_MEMBERINFO:template_MEMBERINFO,
+      TEMPLATE_POINT:template_POINT,
 
       /* Confirmation modals */
       confirm: {

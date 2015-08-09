@@ -1,0 +1,28 @@
+.share-footer {
+  height: 80px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 13px 40px;
+  font-size: 40px;
+  color: #333;
+}
+.share-footer:hover {
+  background-color: rgba(255,255,255,.7);
+}
+.share-footer > .onright {
+  margin-top: 8px;
+}
+
+.position-center {
+  position: fixed;
+  top: calc(50% - 58px);
+  z-index: 920;
+  text-align: center;
+  width: 100%;
+  color: #333;
+  font-size: 80px;
+  font-weight: lighter;
+  font-family: serif;
+  pointer-events: none;
+}

@@ -7,6 +7,8 @@ var mongoose = require('mongoose'),
 var GroupSchema = new Schema({
   group: String,
   member: String,
+  type: String,
+  description: String,
   latitude: Number,
   longitude: Number,
   accuracy: Number,

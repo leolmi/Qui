@@ -1,8 +1,14 @@
-<div class="working-container" ng-show="loading">
+<div class="working-container main" ng-show="loading">
   <div class="working"></div>
 </div>
 <div id="map-canvas"></div>
-<div class="monitor">
+<div class="position-center" ng-show="share">+</div>
+<div class="share-footer" ng-show="share">
+  <i class="fa fa-arrow-circle-o-left aslink" ng-click="sharepos()"></i>
+  <i class="fa fa-map-marker aslink onright" ng-click="sharethis()"></i>
+</div>
+
+<div class="monitor" ng-hide="share">
   <section class="section user" ng-class="{'active':page=='user'}">
     <div class="title"><i class="fa fa-fw fa-user"></i> {{cache().user.nick}}</div>
     <div class="info" ng-show="mypos">
@@ -37,8 +43,11 @@
     <div class="title"><i class="fa fa-fw fa-users"></i> {{cache().group.group}} ({{members ? members.length : 0}})</div>
     <div class="others-container" scroller>
       <div class="others scroller-target" ng-show="members && members.length">
-        <div class="user-item aslink" ng-repeat="m in members" ng-click="center(m)">
+        <div class="group-item aslink" ng-repeat="m in members" ng-click="center(m)">
           <span>{{$index+1}}</span><i class="fa fa-user" ></i> {{m.k}}  ({{m.k[0]}})<i class="fa fa-info-circle onright" ng-click="details(m)"></i>
+        </div>
+        <div class="group-item aslink" ng-repeat="p in points" ng-click="centerMap(p)">
+          <span>{{$index+1}}</span><i class="fa fa-map-marker" ></i> {{p.description}}  ({{$index+1}})<i class="fa fa-info-circle onright" ng-click="details(p)"></i>
         </div>
       </div>
     </div>
@@ -47,6 +56,7 @@
     <i class="fa fa-sign-out aslink" ng-click="logout()" title="Esci"></i>
     <i class="fa fa-user-plus aslink" ng-click="invite()" title="Invita altri amici"></i>
     <i class="fa fa-crosshairs aslink" ng-click="center()" title="Centra la mia posizione"></i>
+    <i class="fa fa-map-marker aslink" ng-click="sharepos()" title="Condividi una posizione"></i>
     <i class="btn-hidden fa aslink onright" ng-click="swipe()"
        ng-class="{'fa-comments':page=='user', 'fa-users':page=='chat', 'fa-user':page=='group'}"></i>
   </footer>

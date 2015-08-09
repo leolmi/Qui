@@ -25,13 +25,20 @@ function handle(pos, cb){
   if (!pos.action) return cb(false);
   switch (pos.action.toLowerCase()){
     case 'exit':
+      //Rimuove tutte le rilevazione del membro in uscita
       Group.find({group:pos.group, member:pos.member})
         .remove(function(){ cb(true); });
       break;
     case 'invite':
       console.log('[INVITE]: '+JSON.stringify(pos.mails));
       //TODO: manda le email di invito
+
       break;
+    //case 'point':
+    //  console.log('[POINT]: '+JSON.stringify(pos.point));
+    //  //TODO: condivide una posizione nel gruppo
+    //
+    //  break;
     default :
       cb(true);
   }

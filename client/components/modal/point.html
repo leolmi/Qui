@@ -1,0 +1,12 @@
+<div ng-controller="PointCtrl">
+  <div class="position">
+    <label>Posizione rilevata:</label>
+    <div>Latitudine: {{modal.context.pos.latitude}}'</div>
+    <div>Longitudine: {{modal.context.pos.longitude}}'</div>
+  </div>
+  <br>
+  <div class="form-group form-group-sm">
+    <label>Descrizione</label>
+    <input type="text" class="form-control" ng-model="modal.context.pos.description" placeholder="descrizione"/>
+  </div>
+</div>
