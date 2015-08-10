@@ -7,7 +7,7 @@ angular.module('quiApp')
 
     var template_WELCOME = 'welcome';
     var template_INVITE = 'invite';
-    var template_MEMBERINFO = 'memberinfo';
+    var template_POSINFO = 'posinfo';
     var template_POINT = 'point';
     /**
      * Opens a modal
@@ -42,7 +42,7 @@ angular.module('quiApp')
       MODAL_YESNOCANCEL:modal_YESNOCANCEL,
       TEMPLATE_WELCOME:template_WELCOME,
       TEMPLATE_INVITE:template_INVITE,
-      TEMPLATE_MEMBERINFO:template_MEMBERINFO,
+      TEMPLATE_POSINFO:template_POSINFO,
       TEMPLATE_POINT:template_POINT,
 
       /* Confirmation modals */

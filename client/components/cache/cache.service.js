@@ -20,7 +20,7 @@ angular.module('quiApp')
       return filtered;
     };
   }])
-  .factory('cache', ['$rootScope','$http','socket','util','$timeout','groupByFilter',function($rootScope,$http,socket,u,$timeout,groupBy) {
+  .factory('cache', ['$rootScope','$http','socket','util','$timeout','groupByFilter','Logger',function($rootScope,$http,socket,u,$timeout,groupBy,Logger) {
     var TYPE_MEMEBER = 'member';
     var TYPE_POINT = 'point';
     var _product = {
@@ -437,6 +437,11 @@ angular.module('quiApp')
       });
     }
 
+    function calcway(s,e,mode) {
+      Logger.warning('[DA FARE]', 'Calcola il percorso da [' +
+        s.latitude + ',' + s.longitude + '] a [' + e.latitude + ',' + e.longitude +
+        '] in modalità:' + mode);
+    }
 
     loadLocal();
 
@@ -454,10 +459,10 @@ angular.module('quiApp')
       init: init,
       invite: invite,
       getInfos: getInfos,
-      //pushPos: pushPos,
       pushMsg: pushMsg,
       sharePos:sharePos,
       leaveGroup: leaveGroup,
-      refreshMembers: refreshItems
+      refreshMembers: refreshItems,
+      calcway:calcway
     };
   }]);

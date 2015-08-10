@@ -1,0 +1,9 @@
+<div ng-controller="PosInfoCtrl">
+  <h2 style="margin: 0 0 10px;">{{modal.context.nick}}</h2>
+  <div ng-repeat="i in modal.context.member">{{i.title}}: {{i.value}}{{i.post}}</div>
+  <br>
+  <div ng-hide="isme">Distanza da me (in linea d'aria): {{distance.toFixed(2)}}m</div>
+  <br>
+  <button class="btn btn-warning" ng-click="calc()">Calcola percorso</button> Modalità:
+  <i class="fa aslink" ng-class="{'fa-car':mode=='car', 'fa-male':mode=='walk'}" ng-click="togglemode()"></i>
+</div>

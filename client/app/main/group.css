@@ -1,7 +1,11 @@
 .others {
   width: calc(100% - 20px);
 }
-
+.others > .separator {
+  border-bottom: #999 1px solid;
+  padding-top: 8px;
+  margin-bottom: 8px;
+}
 .others-container {
   position: absolute;
   height: 120px;
@@ -22,6 +26,9 @@
 .group-item:hover {
   background-color: darkolivegreen;
   color: white;
+}
+.monitor > .section:hover .others > .separator {
+  border-color: #333;
 }
 
 .group-item > span {

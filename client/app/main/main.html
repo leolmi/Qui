@@ -1,6 +1,10 @@
 <div class="working-container main" ng-show="loading">
   <div class="working"></div>
 </div>
+<div class="finder">
+  <i class="fa fa-search"></i>
+  <input class="form-control input-sm" type="text" ng-model="searchtext" ng-keydown="hsearchkey($event)">
+</div>
 <div id="map-canvas"></div>
 <div class="position-center" ng-show="share">+</div>
 <div class="share-footer" ng-show="share">
@@ -46,7 +50,8 @@
         <div class="group-item aslink" ng-repeat="m in members" ng-click="center(m)">
           <span>{{$index+1}}</span><i class="fa fa-user" ></i> {{m.k}}  ({{m.k[0]}})<i class="fa fa-info-circle onright" ng-click="details(m)"></i>
         </div>
-        <div class="group-item aslink" ng-repeat="p in points" ng-click="centerMap(p)">
+        <div class="separator" ng-show="members.length && points.length"></div>
+        <div class="group-item aslink" ng-repeat="p in points" ng-click="centerPoint(p)">
           <span>{{$index+1}}</span><i class="fa fa-map-marker" ></i> {{p.description}}  ({{$index+1}})<i class="fa fa-info-circle onright" ng-click="details(p)"></i>
         </div>
       </div>

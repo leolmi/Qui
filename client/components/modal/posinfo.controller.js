@@ -2,11 +2,26 @@
 'use strict';
 
 angular.module('quiApp')
-  .controller('MemberInfoCtrl', ['$scope','cache', function ($scope, cache) {
+  .controller('PosInfoCtrl', ['$scope','cache','Logger', function ($scope, cache, Logger) {
     var infos = cache.infos();
     var p1 = new google.maps.LatLng(infos.pos.latitude, infos.pos.longitude);
     var p2 = new google.maps.LatLng($scope.modal.context.pos.latitude, $scope.modal.context.pos.longitude);
     $scope.distance = google.maps.geometry.spherical.computeDistanceBetween(p1,p2);
+
+    $scope.isme = ($scope.distance==0);
+
+    $scope.mode = 'car';
+    $scope.togglemode = function() {
+      switch ($scope.mode) {
+        case 'car': $scope.mode='walk'; break;
+        default: $scope.mode='car'; break;
+      }
+    };
+
+    $scope.calc = function() {
+      cache.calcway($scope.modal.context.pos,infos.pos,$scope.mode);
+    };
+
 
     //cache.pos
     //$scope.calculating = true;
