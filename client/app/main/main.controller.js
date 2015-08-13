@@ -286,7 +286,7 @@ angular.module('quiApp')
       var ddl = (200 * dl)/(2*H);
 
       // Calcola le coordinate del centro
-      var latLng = new google.maps.LatLng((pos.latitude || pos.G)-ddl, pos.longitude);
+      var latLng = new google.maps.LatLng((pos.latitude || pos.G)-ddl, (pos.longitude || pos.K));
 
       // Imposta il centro della mappa
       $scope.map.setCenter(latLng);
