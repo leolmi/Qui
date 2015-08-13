@@ -1,0 +1,18 @@
+.road-map {
+  border-top: #ddd 1px solid;
+  padding: 20px 0 0;
+  position: relative;
+}
+.road-map-from-to {
+  margin-bottom: 10px;
+}
+.road-map-from-to > select {
+  width: 140px;
+  display: inline-block;
+  margin: 0 6px;
+}
+
+.road-map > button {
+  position: absolute;
+  right: 0;
+}

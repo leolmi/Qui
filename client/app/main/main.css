@@ -101,7 +101,7 @@
   position: absolute;
   right: 6px;
   font-size: 16px;
-  top: 6px;
+  top: 2px;
 }
 
 @media(max-width: 400px) {

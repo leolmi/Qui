@@ -442,10 +442,50 @@ angular.module('quiApp')
         s.latitude + ',' + s.longitude + '] a [' + e.latitude + ',' + e.longitude +
         '] in modalità:' + mode);
     }
+    //$scope.calculating = true;
+    //var origin = new google.maps.LatLng(55.930385, -3.118425);
+    //var destination = new google.maps.LatLng(50.087692, 14.421150);
+    //
+    //var service = new google.maps.DistanceMatrixService();
+    //service.getDistanceMatrix(
+    //  {
+    //    origins: [origin],
+    //    destinations: [destination],
+    //    travelMode: google.maps.TravelMode.WALKING,
+    //    //transitOptions: TransitOptions,
+    //    unitSystem: google.maps.UnitSystem.METRIC,
+    //    //durationInTraffic: Boolean,
+    //    //avoidHighways: Boolean,
+    //    //avoidTolls: Boolean,
+    //  }, function(resp, status){
+    //    if (status == google.maps.DistanceMatrixStatus.OK) {
+    //      resp.originAddresses
+    //
+    //      $scope.distance =
+    //    }
+    //    $scope.calculating = false;
+    //  });
+
+    function getMarkerPointCoordStr(p, prec) {
+      if (prec) return (p.latitude.toFixed(prec) || p.G.toFixed(prec))+','+(p.longitude.toFixed(prec) || p.K.toFixed(prec));
+      return (p.latitude || p.G)+','+(p.longitude || p.K);
+    }
+    function getMarkerPointDesc(p, prec) {
+      return p.description ? p.description : getMarkerPointCoordStr(p, prec);
+    }
+    function isSamePos(p1, p2){
+      return getMarkerPointCoordStr(p1) == getMarkerPointCoordStr(p2);
+    }
+
 
     loadLocal();
 
     return {
+      util:{
+        getMarkerPointCoordStr:getMarkerPointCoordStr,
+        getMarkerPointDesc:getMarkerPointDesc,
+        isSamePos:isSamePos
+      },
       TYPE_MEMEBER:TYPE_MEMEBER,
       TYPE_POINT:TYPE_POINT,
       update: saveLocal,

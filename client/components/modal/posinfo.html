@@ -3,7 +3,17 @@
   <div ng-repeat="i in modal.context.member">{{i.title}}: {{i.value}}{{i.post}}</div>
   <br>
   <div ng-hide="isme">Distanza da me (in linea d'aria): {{distance.toFixed(2)}}m</div>
-  <br>
-  <button class="btn btn-warning" ng-click="calc()">Calcola percorso</button> Modalità:
-  <i class="fa aslink" ng-class="{'fa-car':mode=='car', 'fa-male':mode=='walk'}" ng-click="togglemode()"></i>
+  <div class="road-map">
+    <div class="road-map-from-to">Da
+      <select class="form-control input-sm" ng-model="data.from"
+              ng-options="i as i.name for i in data.items track by i.name">
+        <!--ng-options="item.subItem as item.label for item in values track by item.id"-->
+      </select>a
+      <select class="form-control input-sm" ng-model="data.to"
+              ng-options="i as i.name for i in data.items track by i.name">
+      </select>
+    </div>
+    <button class="btn btn-warning" ng-click="calc()">Calcola percorso</button> Modalità:
+    <i class="fa aslink" ng-class="{'fa-car':mode=='car', 'fa-male':mode=='walk'}" ng-click="togglemode()"></i>
+  </div>
 </div>

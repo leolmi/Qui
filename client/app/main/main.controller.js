@@ -68,6 +68,27 @@ angular.module('quiApp')
       };
 
       $scope.map = new google.maps.Map(document.getElementById('map-canvas'), options);
+
+
+      // Create the search box and link it to the UI element.
+      var input = document.getElementById('map-finder');
+      var searchBox = new google.maps.places.SearchBox(input);
+      $scope.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+      // Bias the SearchBox results towards current map's viewport.
+      $scope.map.addListener('bounds_changed', function() {
+        searchBox.setBounds($scope.map.getBounds());
+      });
+      searchBox.addListener('places_changed', function() {
+        var places = searchBox.getPlaces();
+
+        if (places.length == 0) return;
+
+        $scope.centerMap(places[0].geometry.location);
+      });
+
+
+
       google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         initWatchers();
         $scope.loading = false;
@@ -115,14 +136,6 @@ angular.module('quiApp')
 
     function amI(member){ return (member==$scope.cache().user.nick); }
 
-    function getMarkerPointCoordStr(p, prec) {
-      if (prec) return (p.latitude.toFixed(prec) || p.G.toFixed(prec))+','+(p.longitude.toFixed(prec) || p.K.toFixed(prec));
-      return (p.latitude || p.G)+','+(p.longitude || p.K);
-    }
-    function getMarkerPointDesc(p, prec) {
-      return p.description ? p.description : getMarkerPointCoordStr(p, prec);
-    }
-
     function getIcon(name) {
       if(name=='point')
         return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=|9ACD32|000000';
@@ -158,7 +171,7 @@ angular.module('quiApp')
         });
         google.maps.event.addListener(m, 'click', function() {
           //_infowindow.open($scope.map,m);
-          var e = _.find($scope.members, function(mmb) { return isSamePos(mmb.k, m.title); });
+          var e = _.find($scope.members, function(mmb) { return cache.util.isSamePos(mmb.k, m.title); });
           if (e) $scope.details(e);
         });
         _markers_member.push(m);
@@ -169,10 +182,6 @@ angular.module('quiApp')
       cb(members, old, cur);
     }
 
-    function isSamePos(p1, p2){
-      return getMarkerPointCoordStr(p1) == getMarkerPointCoordStr(p2);
-    }
-
     /**
      * Aggiorna i markers dei punti condivisi
      */
@@ -181,7 +190,7 @@ angular.module('quiApp')
       var cur = [];
       var points = cache.infos().points;
       points.forEach(function(p, i){
-        var desc = getMarkerPointDesc(p, 8);
+        var desc = cache.util.getMarkerPointDesc(p, 8);
         var latLng = new google.maps.LatLng(p.latitude, p.longitude);
         var icon = getIcon('point');
         var m = new google.maps.Marker({
@@ -193,7 +202,7 @@ angular.module('quiApp')
         });
         google.maps.event.addListener(m, 'click', function() {
           //_infowindow.open($scope.map,m);
-          var e = _.find($scope.points, function(pnt) { return isSamePos(pnt, m.position); });
+          var e = _.find($scope.points, function(pnt) { return cache.util.isSamePos(pnt, m.position); });
           if (e) $scope.details(e);
         });
 
@@ -277,7 +286,7 @@ angular.module('quiApp')
       var ddl = (200 * dl)/(2*H);
 
       // Calcola le coordinate del centro
-      var latLng = new google.maps.LatLng(pos.latitude-ddl, pos.longitude);
+      var latLng = new google.maps.LatLng((pos.latitude || pos.G)-ddl, pos.longitude);
 
       // Imposta il centro della mappa
       $scope.map.setCenter(latLng);
@@ -292,9 +301,8 @@ angular.module('quiApp')
 
     $scope.center = function(m) {
       if (!$scope.map) return;
-      //u = u || $scope.user;
       var member = m ? m.k : $scope.cache().user.nick;
-      var location = m ? m.v.last() : $scope.mypos;
+      var location = m ? m.v.last() : $scope.cache().pos;
 
       if (amI(member) && !_firstcenter)
         _firstcenter = true;
@@ -305,7 +313,7 @@ angular.module('quiApp')
     $scope.centerPoint = function(p) {
       if (!$scope.map || !p) return;
 
-      $scope.centerMap(p, function() { return _.find(_markers_point, function(pnt){ return isSamePos(pnt.position,p); }); });
+      $scope.centerMap(p, function() { return _.find(_markers_point, function(pnt){ return cache.util.isSamePos(pnt.position,p); }); });
     };
 
     $scope.swipe = function() {
@@ -380,7 +388,7 @@ angular.module('quiApp')
         ok:true,
         pos: o.v ? o.v.last() : o,
         member: o.v ? cache.getInfos(o.v.last()) : cache.getInfos(o),
-        nick: o.k ? o.k : getMarkerPointDesc(o, 8)
+        nick: o.k ? o.k : cache.util.getMarkerPointDesc(o, 8)
       };
       modalDetails(opt);
     };
