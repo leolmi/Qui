@@ -156,4 +156,6 @@ angular.module('quiApp')
         }
       });
     };
+
+    cache.loadAppInfo();
   }]);

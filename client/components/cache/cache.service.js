@@ -24,8 +24,8 @@ angular.module('quiApp')
     var TYPE_MEMEBER = 'member';
     var TYPE_POINT = 'point';
     var _product = {
-      name: 'Ndo6',
-      version: '1.0.4'
+      name:'?',
+      version: '?'
     };
     var _data = {
       ismodal: false
@@ -170,6 +170,16 @@ angular.module('quiApp')
       }
     }
 
+    function loadAppInfo(cb) {
+      cb = cb || angular.noop;
+      $http.get('/api/info')
+        .success(function(infos){
+          _product.name = infos.product.name;
+          _product.version = infos.product.version;
+          cb(_product);
+        });
+    }
+
     /**
      * Inizializza la cache
      * @param g
@@ -186,6 +196,7 @@ angular.module('quiApp')
       _infos.user = {
         nick: nick
       };
+      loadAppInfo();
       saveLocal();
       readMessages();
       var h = hresp(function() {
@@ -488,6 +499,7 @@ angular.module('quiApp')
       },
       TYPE_MEMEBER:TYPE_MEMEBER,
       TYPE_POINT:TYPE_POINT,
+      loadAppInfo:loadAppInfo,
       update: saveLocal,
       testGeo: testGeo,
       data: _data,
