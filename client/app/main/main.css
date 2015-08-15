@@ -104,6 +104,14 @@
   top: 2px;
 }
 
+.show-route {
+  position: absolute;
+  right: 10px;
+  z-index: 920;
+  top: 40px;
+  color: orange;
+}
+
 @media(max-width: 400px) {
   .finder {
     margin: 30px 40px;

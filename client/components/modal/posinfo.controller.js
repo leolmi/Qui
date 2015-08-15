@@ -7,29 +7,35 @@ angular.module('quiApp')
     var p1 = new google.maps.LatLng(infos.pos.latitude, infos.pos.longitude);
     var p2 = new google.maps.LatLng($scope.modal.context.pos.latitude, $scope.modal.context.pos.longitude);
     $scope.distance = google.maps.geometry.spherical.computeDistanceBetween(p1,p2);
-    //$scope.from = undefined;
-    //$scope.to = undefined;
     $scope.isme = ($scope.distance==0);
+    $scope.items = [];
+
+    $scope.modal.context.route = {
+      calc: false,
+      origin:{},
+      destination:{},
+      waypts:[],
+      mode:'car'
+    };
 
     $scope.mode = 'car';
     $scope.togglemode = function() {
-      switch ($scope.mode) {
-        case 'car': $scope.mode='walk'; break;
-        default: $scope.mode='car'; break;
+      switch ($scope.modal.context.route.mode) {
+        case 'car':
+          $scope.modal.context.route.mode = 'walk';
+          break;
+        default:
+          $scope.modal.context.route.mode = 'car';
+          break;
       }
     };
 
-    $scope.data = {
-      items: [],
-      from: undefined,
-      to: undefined
-    };
 
     function checkSelection(item) {
       if (cache.util.isSamePos(item, $scope.modal.context.pos))
-        $scope.data.to = item;
+        $scope.modal.context.route.destination = item;
       if (cache.util.isSamePos(item, infos.pos))
-        $scope.data.from = item;
+        $scope.modal.context.route.origin = item;
     }
 
     function getItem(o) {
@@ -47,15 +53,9 @@ angular.module('quiApp')
     }
 
     infos.members.forEach(function(m){
-      $scope.data.items.push(getItem(m));
+      $scope.items.push(getItem(m));
     });
     infos.points.forEach(function(p){
-      $scope.data.items.push(getItem(p));
+      $scope.items.push(getItem(p));
     });
-
-
-    $scope.calc = function() {
-      if (!$scope.data.from || !$scope.data.to) return;
-      cache.calcway($scope.data.from,$scope.data.to,$scope.mode);
-    };
   }]);

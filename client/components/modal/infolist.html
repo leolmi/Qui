@@ -1,0 +1,6 @@
+<div class="info-list">
+  <div class="info-item" ng-repeat="i in modal.context.infos">
+    <div ng-show="i.name">{{i.name}}: <span class="value">{{i.value}}</span></div>
+    <div class="separator" ng-show="i.separator"></div>
+  </div>
+</div>

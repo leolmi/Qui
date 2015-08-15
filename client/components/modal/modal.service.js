@@ -9,6 +9,7 @@ angular.module('quiApp')
     var template_INVITE = 'invite';
     var template_POSINFO = 'posinfo';
     var template_POINT = 'point';
+    var template_INFOLIST = 'infolist';
     /**
      * Opens a modal
      * @param  {Object} scope      - an object to be merged with modal's scope
@@ -44,6 +45,7 @@ angular.module('quiApp')
       TEMPLATE_INVITE:template_INVITE,
       TEMPLATE_POSINFO:template_POSINFO,
       TEMPLATE_POINT:template_POINT,
+      TEMPLATE_INFOLIST:template_INFOLIST,
 
       /* Confirmation modals */
       confirm: {
@@ -175,6 +177,21 @@ angular.module('quiApp')
               popupModal;
             var show = args[0].show || { header: true, footer:true };
             var buttons = [];
+
+            if (args[0].buttons) {
+              args[0].buttons.forEach(function(b){
+                buttons.push({
+                  classes: b.style || 'btn-warning',
+                  text: b.caption,
+                  click: function(e) {
+                    if (b.action)
+                      b.action();
+                    if (b.close)
+                      popupModal.close(e);
+                  }
+                });
+              });
+            }
             if (args[0].ok){
               buttons.push({
                 classes: 'btn-success',
@@ -193,6 +210,7 @@ angular.module('quiApp')
                 }
               });
             }
+
 
             popupModal = openModal({
               modal: {

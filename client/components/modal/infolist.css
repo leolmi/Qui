@@ -1,0 +1,13 @@
+.info-list {
+  color: #999;
+}
+
+.info-list .value {
+  color: #111;
+}
+
+.info-list .separator {
+  margin-top: 10px;
+  border-top: #eee 1px solid;
+  padding-top: 10px;
+}

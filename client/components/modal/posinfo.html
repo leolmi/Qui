@@ -4,16 +4,15 @@
   <br>
   <div ng-hide="isme">Distanza da me (in linea d'aria): {{distance.toFixed(2)}}m</div>
   <div class="road-map">
+    <label>Percorso:</label>
     <div class="road-map-from-to">Da
-      <select class="form-control input-sm" ng-model="data.from"
-              ng-options="i as i.name for i in data.items track by i.name">
-        <!--ng-options="item.subItem as item.label for item in values track by item.id"-->
+      <select class="form-control input-sm" ng-model="modal.context.route.origin"
+              ng-options="i as i.name for i in items track by i.name">
       </select>a
-      <select class="form-control input-sm" ng-model="data.to"
-              ng-options="i as i.name for i in data.items track by i.name">
+      <select class="form-control input-sm" ng-model="modal.context.route.destination"
+              ng-options="i as i.name for i in items track by i.name">
       </select>
+      <i class="fa aslink" ng-class="{'fa-car':modal.context.route.mode=='car', 'fa-male':modal.context.route.mode=='walk'}" ng-click="togglemode()"></i>
     </div>
-    <button class="btn btn-warning" ng-click="calc()">Calcola percorso</button> Modalità:
-    <i class="fa aslink" ng-class="{'fa-car':mode=='car', 'fa-male':mode=='walk'}" ng-click="togglemode()"></i>
   </div>
 </div>

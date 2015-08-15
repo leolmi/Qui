@@ -25,7 +25,7 @@ angular.module('quiApp')
       mapsInitialized : mapsDefer.promise
     };
   })
-  .controller('MainCtrl', ['$scope','$location','$rootScope','$window','Auth','$http','socket','initializer','$timeout','cache','util','Logger','Modal', function ($scope,$location,$rootScope,$window,Auth,$http,socket,initializer,$timeout,cache,u,Logger,Modal) {
+  .controller('MainCtrl', ['$scope','$location','$rootScope','$window','maps','Auth','$http','socket','initializer','$timeout','cache','util','Logger','Modal', function ($scope,$location,$rootScope,$window,maps,Auth,$http,socket,initializer,$timeout,cache,u,Logger,Modal) {
     var _markers_member = [];
     var _markers_point = [];
     $scope.loading = true;
@@ -33,7 +33,7 @@ angular.module('quiApp')
     $scope.getDate = u.getDate;
     $scope.share = false;
     var _firstcenter = false;
-    var _infowindow = null;
+    //var _infowindow = null;
     var _stopwatchitems = undefined;
     var _stopwatchmsg = undefined;
 
@@ -61,35 +61,8 @@ angular.module('quiApp')
     }
 
     initializer.mapsInitialized.then(function() {
-      var options = {
-        zoom: 14,
-        center: new google.maps.LatLng(43.7681469,11.2527254),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-
-      $scope.map = new google.maps.Map(document.getElementById('map-canvas'), options);
-
-
-      // Create the search box and link it to the UI element.
-      var input = document.getElementById('map-finder');
-      var searchBox = new google.maps.places.SearchBox(input);
-      $scope.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-      // Bias the SearchBox results towards current map's viewport.
-      $scope.map.addListener('bounds_changed', function() {
-        searchBox.setBounds($scope.map.getBounds());
-      });
-      searchBox.addListener('places_changed', function() {
-        var places = searchBox.getPlaces();
-
-        if (places.length == 0) return;
-
-        $scope.centerMap(places[0].geometry.location);
-      });
-
-
-
-      google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+      maps.createContext(google, $scope.centerMap, function(ctx) {
+        $scope.context = ctx;
         initWatchers();
         $scope.loading = false;
       });
@@ -102,6 +75,7 @@ angular.module('quiApp')
       refreshMarkers();
       checkErrors();
     });
+
 
     function checkErrors() {
       if ($scope.error)
@@ -137,17 +111,12 @@ angular.module('quiApp')
     function amI(member){ return (member==$scope.cache().user.nick); }
 
     function getIcon(name) {
-      if(name=='point')
-        return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=|9ACD32|000000';
-      return undefined;
-      //return 'assets/images/' + name + '.png';
-
-      //return {
-      //  url: 'assets/images/' + name + '.png',
-      //  size: new google.maps.Size(32, 32),
-      //  origin: new google.maps.Point(0, 0),
-      //  anchor: new google.maps.Point(0, 16)
-      //};
+      return {
+        url: 'assets/images/' + name + '.png',
+        size: new google.maps.Size(32, 32),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(16, 32)
+      }
     }
 
     /**
@@ -163,14 +132,14 @@ angular.module('quiApp')
         var latLng = new google.maps.LatLng(pos.latitude, pos.longitude);
         var icon = getIcon('member');
         var m = new google.maps.Marker({
-          map: $scope.map,
+          map: $scope.context.map,
           label: member[0],
           position: latLng,
           title: member,
           icon: icon
         });
         google.maps.event.addListener(m, 'click', function() {
-          //_infowindow.open($scope.map,m);
+          //_infowindow.open($scope.context.map,m);
           var e = _.find($scope.members, function(mmb) { return cache.util.isSamePos(mmb.k, m.title); });
           if (e) $scope.details(e);
         });
@@ -194,14 +163,14 @@ angular.module('quiApp')
         var latLng = new google.maps.LatLng(p.latitude, p.longitude);
         var icon = getIcon('point');
         var m = new google.maps.Marker({
-          map: $scope.map,
+          map: $scope.context.map,
           label: '' + (i + 1),
           position: latLng,
           title: desc,
           icon: icon
         });
         google.maps.event.addListener(m, 'click', function() {
-          //_infowindow.open($scope.map,m);
+          //_infowindow.open($scope.context.map,m);
           var e = _.find($scope.points, function(pnt) { return cache.util.isSamePos(pnt, m.position); });
           if (e) $scope.details(e);
         });
@@ -279,7 +248,7 @@ angular.module('quiApp')
     $scope.centerMap = function(pos, finder){
       // il centro è considerato più in alto per
       // lasciare lo spazio al monitor
-      var bounds = $scope.map.getBounds();
+      var bounds = $scope.context.map.getBounds();
       if (!bounds) return;
       var dl = bounds.getNorthEast().lat() - bounds.getSouthWest().lat();
       var H = angular.element($window).height();
@@ -289,7 +258,7 @@ angular.module('quiApp')
       var latLng = new google.maps.LatLng((pos.latitude || pos.G)-ddl, (pos.longitude || pos.K));
 
       // Imposta il centro della mappa
-      $scope.map.setCenter(latLng);
+      $scope.context.map.setCenter(latLng);
 
       var mrk = finder ? finder() : null;
       if (mrk) {
@@ -300,7 +269,7 @@ angular.module('quiApp')
     };
 
     $scope.center = function(m) {
-      if (!$scope.map) return;
+      if (!$scope.context.map) return;
       var member = m ? m.k : $scope.cache().user.nick;
       var location = m ? m.v.last() : $scope.cache().pos;
 
@@ -311,7 +280,7 @@ angular.module('quiApp')
     };
 
     $scope.centerPoint = function(p) {
-      if (!$scope.map || !p) return;
+      if (!$scope.context.map || !p) return;
 
       $scope.centerMap(p, function() { return _.find(_markers_point, function(pnt){ return cache.util.isSamePos(pnt.position,p); }); });
     };
@@ -359,7 +328,7 @@ angular.module('quiApp')
       $scope.share = false;
     });
     $scope.sharethis = function() {
-      var bounds = $scope.map.getBounds();
+      var bounds = $scope.context.map.getBounds();
       var latNE = bounds.getNorthEast().lat();
       var lngNE = bounds.getNorthEast().lng();
       var latSW = bounds.getSouthWest().lat();
@@ -378,18 +347,53 @@ angular.module('quiApp')
       modalPoints(opt);
     };
 
-    var modalDetails = Modal.confirm.popup();
+    var modalDetails = Modal.confirm.popup(function(opt) {
+      if (opt.calc && opt.route.origin && opt.route.destination){
+        $scope.loading = true;
+        var route = maps.routeInfo($scope.context, opt.route.origin, opt.route.destination, null, opt.route.mode);
+        maps.calcRoute($scope.context, route, function(err){
+          $scope.loading = false;
+          if (err)
+            Logger.error('Errori', err);
+          else
+            $scope.showroute();
+        });
+      }
+    });
     $scope.details = function(o) {
       var opt = {
         title: o.k ?
           'Dettagli del membro: '+ o.k + ',  ('+ o.k[0]+') sulla mappa' :
           'Dettagli della posizione condivisa',
         template: Modal.TEMPLATE_POSINFO,
-        ok:true,
+        ok:{text:'Fatto'},
         pos: o.v ? o.v.last() : o,
         member: o.v ? cache.getInfos(o.v.last()) : cache.getInfos(o),
-        nick: o.k ? o.k : cache.util.getMarkerPointDesc(o, 8)
+        ctx: $scope.context,
+        nick: o.k ? o.k : cache.util.getMarkerPointDesc(o, 8),
+        calc: false,
+        buttons:[{
+          caption:'Calcola Percorso',
+          action: function() { opt.calc = true; },
+          close: true
+        }]
       };
       modalDetails(opt);
+    };
+
+    var modalRoute = Modal.confirm.popup();
+    $scope.showroute = function() {
+      var opt = {
+        title: 'Percorso',
+        ok:{text:'Fatto'},
+        template: Modal.TEMPLATE_INFOLIST,
+        infos: maps.getRouteInfos($scope.context),
+        buttons:[{
+          caption:'Cancella',
+          action: function() { maps.clearRoute($scope.context); },
+          close: true
+        }]
+      };
+      modalRoute(opt);
     };
   }]);
