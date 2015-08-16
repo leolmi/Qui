@@ -6,7 +6,11 @@
   </div>
   <br>
   <div class="form-group form-group-sm">
+    <label>Nome</label>
+    <input type="text" class="form-control" ng-model="modal.context.pos.description" ng-enter="close" autofocus/>
+  </div>
+  <div class="form-group form-group-sm">
     <label>Descrizione</label>
-    <input type="text" class="form-control" ng-model="modal.context.pos.description" placeholder="descrizione"/>
+    <textarea class="form-control vertical" ng-model="modal.context.pos.notes" rows="3"></textarea>
   </div>
 </div>

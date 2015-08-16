@@ -1,4 +1,8 @@
 <div ng-controller="InviteCtrl">
-  <p>Corpo del form di invito al gruppo....</p>
-  <p>1 dfgsfdgdfsgsdfg sdfgsdf</p>
+  <label>Messaggio (precompilato)</label>
+  <pre>{{modal.context.fixedmessage}}</pre>
+  <label>Aggiungi un messaggio personalizzato se vuoi</label>
+  <textarea class="form-control input-sm vertical" rows="2" ng-model="modal.context.message"></textarea>
+  <label>Scrivi gli indirizzi e-mail degli amici che vuoi invitare</label>
+  <textarea class="form-control input-sm vertical" rows="3" ng-model="modal.context.emails"></textarea>
 </div>

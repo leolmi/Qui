@@ -88,6 +88,7 @@ angular.module('quiApp')
         var group = Auth.getCurrentUser();
         checkMember(group, function(valid) {
           if (valid) {
+            group.password = $scope.user.password;
             cache.init(group, $scope.user.nick, function () {
               $scope.loading = false;
               $location.path('/main');

@@ -311,11 +311,17 @@ angular.module('quiApp')
       //TODO: invita altri membri nel gruppo
     });
     $scope.invite = function() {
+      var info = cache.infos();
       var opt = {
         title: 'Invita altre persone nel gruppo indicandone la mail',
         template: Modal.TEMPLATE_INVITE,
         ok:true,
-        cancel:true
+        cancel:true,
+        fixedmessage:'Ciao, '+info.user.nick+' ti invita ad entrare nel gruppo "'+info.group.group+'":'+
+        'vai sul sito '+cache.product.name.toLowerCase()+'.herokuapp.com ed inserisci il nome del gruppo con password "'+info.group.password+'",'+
+        ' assegnati un nick per farti riconoscere ed accedi all\'area riservata.',
+        message:'',
+        emails:''
       };
       modalInvite(opt);
     };

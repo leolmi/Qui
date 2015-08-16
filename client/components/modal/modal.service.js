@@ -53,7 +53,7 @@ angular.module('quiApp')
          * Returns options for right ask modal form
          * @param type
          */
-        getAskOptions: function(type) {
+        getAskOptions: function (type) {
           var args = Array.prototype.slice.call(arguments),
             type = args.shift();
           var opt = {
@@ -69,7 +69,7 @@ angular.module('quiApp')
             noResult: 'no',
             modalClass: 'modal-warning'
           };
-          switch(type) {
+          switch (type) {
             case(modal_DELETE):
               opt.title = 'Conferma Eliminazione';
               opt.body = '<p>Sicuro di voler eliminare <strong>' + args[0] + '</strong> ?</p>';
@@ -92,7 +92,7 @@ angular.module('quiApp')
          * @param  {Function} [dsc] - callback, ran when execution is discard
          * @return {Function}     - the function to open the modal (ex. myModalFn)
          */
-        ask: function(exc, dsc) {
+        ask: function (exc, dsc) {
           exc = exc || angular.noop;
           dsc = dsc || angular.noop;
 
@@ -101,35 +101,35 @@ angular.module('quiApp')
            * @param  options   - class of modal options
            * @param  {All}     - any additional args are passed staight to del callback
            */
-          return function() {
+          return function () {
             var args = Array.prototype.slice.call(arguments),
               options = args.shift(),
               execModal;
 
             var buttons = [];
             if (options.ok) buttons.push({
-                classes: options.okClass,
-                text: options.ok,
-                click: function(e) {
-                  args.push(options.okResult);
-                  execModal.close(e);
-                }
-              });
+              classes: options.okClass,
+              text: options.ok,
+              click: function (e) {
+                args.push(options.okResult);
+                execModal.close(e);
+              }
+            });
             if (options.no) buttons.push({
-                classes: options.noClass,
-                text: options.no,
-                click: function(e) {
-                  args.push(options.noResult);
-                  execModal.close(e);
-                }
-              });
+              classes: options.noClass,
+              text: options.no,
+              click: function (e) {
+                args.push(options.noResult);
+                execModal.close(e);
+              }
+            });
             if (options.cancel) buttons.push({
-                classes: options.cancelClass,
-                text: options.cancel,
-                click: function(e) {
-                  execModal.dismiss(e);
-                }
-              });
+              classes: options.cancelClass,
+              text: options.cancel,
+              click: function (e) {
+                execModal.dismiss(e);
+              }
+            });
 
             execModal = openModal({
               modal: {
@@ -140,10 +140,10 @@ angular.module('quiApp')
               }
             }, options.modalClass);
 
-            execModal.result.then(function(event) {
+            execModal.result.then(function (event) {
               exc.apply(event, args);
               resetModalState();
-            }, function(event){
+            }, function (event) {
               dsc.apply(event, args);
               resetModalState();
             });
@@ -157,7 +157,7 @@ angular.module('quiApp')
          * @param  {Function} [dsc] - callback, ran when execution is discard
          * @returns {Function}
          */
-        popup: function(exc, dsc) {
+        popup: function (exc, dsc) {
           exc = exc || angular.noop;
           dsc = dsc || angular.noop;
 
@@ -172,18 +172,18 @@ angular.module('quiApp')
            *    opt.show.header = true/false
            *    opt.show.footer = true/false
            */
-          return function() {
+          return function () {
             var args = Array.prototype.slice.call(arguments),
               popupModal;
-            var show = args[0].show || { header: true, footer:true };
+            var show = args[0].show || {header: true, footer: true};
             var buttons = [];
 
             if (args[0].buttons) {
-              args[0].buttons.forEach(function(b){
+              args[0].buttons.forEach(function (b) {
                 buttons.push({
                   classes: b.style || 'btn-warning',
                   text: b.caption,
-                  click: function(e) {
+                  click: function (e) {
                     if (b.action)
                       b.action();
                     if (b.close)
@@ -192,11 +192,11 @@ angular.module('quiApp')
                 });
               });
             }
-            if (args[0].ok){
+            if (args[0].ok) {
               buttons.push({
                 classes: 'btn-success',
                 text: args[0].ok.text || 'Ok',
-                click: function(e) {
+                click: function (e) {
                   popupModal.close(e);
                 }
               });
@@ -205,12 +205,11 @@ angular.module('quiApp')
               buttons.push({
                 classes: 'btn-warning',
                 text: args[0].cancel.text || 'Annulla',
-                click: function(e) {
+                click: function (e) {
                   popupModal.dismiss(e);
                 }
               });
             }
-
 
             popupModal = openModal({
               modal: {
@@ -218,16 +217,22 @@ angular.module('quiApp')
                 dismissable: true,
                 idle: false,
                 title: args[0].title,
-                template: 'components/modal/'+args[0].template+'.html',
+                template: 'components/modal/' + args[0].template + '.html',
                 buttons: buttons,
                 show: show
+              },
+              close: function (e) {
+                popupModal.close(e);
+              },
+              cancel: function (e) {
+                popupModal.dismiss(e);
               }
             }, 'modal-popup');
 
-            popupModal.result.then(function(event) {
+            popupModal.result.then(function (event) {
               exc.apply(event, args);
               resetModalState();
-            }, function() {
+            }, function () {
               dsc.apply(event, args);
               resetModalState();
             });
