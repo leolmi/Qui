@@ -17,3 +17,18 @@
   position: absolute;
   right: 0;
 }
+
+.road-map-waypoints {
+  position: relative;
+}
+.road-map-waypoint{
+  display: inline-block;
+  margin: 2px;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.road-map-waypoint:hover,
+.road-map-waypoint.selected {
+  background-color: yellowgreen;
+}

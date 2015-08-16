@@ -96,8 +96,8 @@ angular.module('quiApp')
 
     /**
      * Calcola il percorso
-     * @param context
-     * @param {routeInfo} info
+     * @param {object} context
+     * @param {object} info
      * @param [cb]
      */
     function calcRoute(context, info, cb) {
@@ -164,6 +164,7 @@ angular.module('quiApp')
     }
 
     return {
+      getLatLng:getLatLng,
       getOptions:getOptions,
       createContext:createContext,
       routeInfo:routeInfo,

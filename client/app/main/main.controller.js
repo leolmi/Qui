@@ -347,10 +347,23 @@ angular.module('quiApp')
       modalPoints(opt);
     };
 
+    function getWayPoints(items){
+      var pnts = [];
+      items.forEach(function(p){
+        if (p.selected)
+          pnts.push({
+            location: maps.getLatLng(google, p),
+            stopover: false
+          });
+      });
+      return pnts;
+    }
+
     var modalDetails = Modal.confirm.popup(function(opt) {
       if (opt.calc && opt.route.origin && opt.route.destination){
         $scope.loading = true;
-        var route = maps.routeInfo($scope.context, opt.route.origin, opt.route.destination, null, opt.route.mode);
+        var pnts = getWayPoints(opt.route.items);
+        var route = maps.routeInfo($scope.context, opt.route.origin, opt.route.destination, pnts, opt.route.mode);
         maps.calcRoute($scope.context, route, function(err){
           $scope.loading = false;
           if (err)

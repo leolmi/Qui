@@ -4,12 +4,13 @@
 * Puoi mandare messaggi ai componenti del gruppo
 * Puoi vedere sulle mappe di Google(R) dove ogni membro è situato
 * calcola distanza tra membri (google api)
+* calcola percorso da un punto (condiviso) ad un altro (google api) 
 
 
 In Sviluppo:
 * Invito a nuovi membri (finestra modale)
-* Traccia spostamenti di un membro  
-* calcola percorso da un punto (condiviso) ad un altro (passando per altri punti) (google api)
+* Traccia spostamenti di un membro
+* calcolo del percorso passando per altri punti condivisi (google api)
 * condividi posizione membri, posizione su mappa, foto geolocalizzata
 
 

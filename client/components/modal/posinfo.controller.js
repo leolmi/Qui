@@ -2,19 +2,19 @@
 'use strict';
 
 angular.module('quiApp')
-  .controller('PosInfoCtrl', ['$scope','cache','Logger', function ($scope, cache, Logger) {
+  .controller('PosInfoCtrl', ['$scope','cache', function ($scope, cache) {
     var infos = cache.infos();
     var p1 = new google.maps.LatLng(infos.pos.latitude, infos.pos.longitude);
     var p2 = new google.maps.LatLng($scope.modal.context.pos.latitude, $scope.modal.context.pos.longitude);
     $scope.distance = google.maps.geometry.spherical.computeDistanceBetween(p1,p2);
     $scope.isme = ($scope.distance==0);
-    $scope.items = [];
 
     $scope.modal.context.route = {
       calc: false,
       origin:{},
       destination:{},
       waypts:[],
+      items: [],
       mode:'car'
     };
 
@@ -53,9 +53,9 @@ angular.module('quiApp')
     }
 
     infos.members.forEach(function(m){
-      $scope.items.push(getItem(m));
+      $scope.modal.context.route.items.push(getItem(m));
     });
     infos.points.forEach(function(p){
-      $scope.items.push(getItem(p));
+      $scope.modal.context.route.items.push(getItem(p));
     });
   }]);

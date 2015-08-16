@@ -7,12 +7,18 @@
     <label>Percorso:</label>
     <div class="road-map-from-to">Da
       <select class="form-control input-sm" ng-model="modal.context.route.origin"
-              ng-options="i as i.name for i in items track by i.name">
+              ng-options="i as i.name for i in modal.context.route.items track by i.name">
       </select>a
       <select class="form-control input-sm" ng-model="modal.context.route.destination"
-              ng-options="i as i.name for i in items track by i.name">
+              ng-options="i as i.name for i in modal.context.route.items track by i.name">
       </select>
       <i class="fa aslink" ng-class="{'fa-car':modal.context.route.mode=='car', 'fa-male':modal.context.route.mode=='walk'}" ng-click="togglemode()"></i>
+    </div>
+    <label>Punti intermedi:</label>
+    <div class="road-map-waypoints">
+      <div class="road-map-waypoint" ng-class="{'selected':p.selected}" ng-repeat="p in modal.context.route.items">
+        <i class="fa" ng-class="{'fa-check-square':p.selected,'fa-square':!p.selected}" ng-click="p.selected = !p.selected"></i> {{p.name}}
+      </div>
     </div>
   </div>
 </div>
