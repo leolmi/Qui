@@ -1,6 +1,6 @@
 {
-  "name": "qui",
-  "version": "0.0.0",
+  "name": "Ndo6",
+  "version": "1.0.7",
   "main": "server/app.js",
   "dependencies": {
     "bower": "~1.4.1",
