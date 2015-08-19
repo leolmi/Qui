@@ -50,7 +50,9 @@ body > .ng-scope {
 .aslink {
   cursor: pointer;
 }
-
+.aslink.checked {
+  color: yellowgreen;
+}
 .aslink:hover {
   color: #ff8c00;
 }

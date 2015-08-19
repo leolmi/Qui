@@ -82,7 +82,11 @@
 
 .monitor > footer > .btn-hidden {
   display: none;
-  margin-top: 6px;
+  /*margin-top: 6px;*/
+}
+
+.monitor > footer .fa.onright {
+  margin: 6px;
 }
 
 .working-container.main {

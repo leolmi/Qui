@@ -64,6 +64,7 @@ angular.module('quiApp')
     }
     var _infos = Infos();
     var _active = false;
+    var _debug = false;
 
     /**
      * Se l'utente esiste viene notificata la sua dipartita dal gruppo
@@ -351,6 +352,8 @@ angular.module('quiApp')
     function hposition(xpos, cb){
       cb = cb || angular.noop;
       var pos = Pos(xpos);
+      if (_debug)
+        Logger.info('Lettura:', getMarkerPointCoordStr(pos));
       if (!isTheSame(pos)) {
         pushPos(pos, function() {
           cb();
@@ -367,12 +370,12 @@ angular.module('quiApp')
     /**
      * Gestisce l'errore nella rilevazione dei dati posizionali
      * @param err
-     * @param noread
+     * @param {boolean} noread
      */
-    function herror(err, noread){
+    function herror(err, noread) {
       _infos.errors.push(err.message);
-      if (!noread)
-        readPositionTimeout();
+      if (noread == true) return;
+      readPositionTimeout();
     }
 
     /**
@@ -448,35 +451,6 @@ angular.module('quiApp')
       });
     }
 
-    function calcway(s,e,mode) {
-      Logger.warning('[DA FARE]', 'Calcola il percorso da [' +
-        s.latitude + ',' + s.longitude + '] a [' + e.latitude + ',' + e.longitude +
-        '] in modalità:' + mode);
-    }
-    //$scope.calculating = true;
-    //var origin = new google.maps.LatLng(55.930385, -3.118425);
-    //var destination = new google.maps.LatLng(50.087692, 14.421150);
-    //
-    //var service = new google.maps.DistanceMatrixService();
-    //service.getDistanceMatrix(
-    //  {
-    //    origins: [origin],
-    //    destinations: [destination],
-    //    travelMode: google.maps.TravelMode.WALKING,
-    //    //transitOptions: TransitOptions,
-    //    unitSystem: google.maps.UnitSystem.METRIC,
-    //    //durationInTraffic: Boolean,
-    //    //avoidHighways: Boolean,
-    //    //avoidTolls: Boolean,
-    //  }, function(resp, status){
-    //    if (status == google.maps.DistanceMatrixStatus.OK) {
-    //      resp.originAddresses
-    //
-    //      $scope.distance =
-    //    }
-    //    $scope.calculating = false;
-    //  });
-
     function getMarkerPointCoordStr(p, prec) {
       if (prec) return (p.latitude.toFixed(prec) || p.G.toFixed(prec))+','+(p.longitude.toFixed(prec) || p.K.toFixed(prec));
       return (p.latitude || p.G)+','+(p.longitude || p.K);
@@ -488,6 +462,9 @@ angular.module('quiApp')
       return getMarkerPointCoordStr(p1) == getMarkerPointCoordStr(p2);
     }
 
+    function toggleDebug() {
+      _debug = !_debug;
+    }
 
     loadLocal();
 
@@ -499,6 +476,8 @@ angular.module('quiApp')
       },
       TYPE_MEMEBER:TYPE_MEMEBER,
       TYPE_POINT:TYPE_POINT,
+      isDebug: function() { return _debug; },
+      toggleDebug:toggleDebug,
       loadAppInfo:loadAppInfo,
       update: saveLocal,
       testGeo: testGeo,
@@ -514,7 +493,6 @@ angular.module('quiApp')
       pushMsg: pushMsg,
       sharePos:sharePos,
       leaveGroup: leaveGroup,
-      refreshMembers: refreshItems,
-      calcway:calcway
+      refreshMembers: refreshItems
     };
   }]);

@@ -32,6 +32,7 @@ angular.module('quiApp')
     $scope.page = 'user';
     $scope.getDate = u.getDate;
     $scope.share = false;
+    $scope.centerlocked = false;
     var _firstcenter = false;
     //var _infowindow = null;
     var _stopwatchitems = undefined;
@@ -191,9 +192,10 @@ angular.module('quiApp')
           // la presenza dell'utente corrente
           var index = mbm.indexOf($scope.cache().user.nick);
           if (index >= 0) {
-            //La prima volta che viene rilevata la presenza del membro
-            //viene centrata la sua posizione
-            if (!_firstcenter)
+            // La prima volta che viene rilevata la presenza del membro
+            // oppure se la centratura è bloccata
+            // viene centrata la sua posizione
+            if (!_firstcenter || $scope.centerlocked)
               $scope.center();
             mbm.splice(index, 1);
             _firstcenter = true;
@@ -306,7 +308,7 @@ angular.module('quiApp')
     };
 
     var modalInvite = Modal.confirm.popup(function(opt){
-      Logger.info('TODO','invita gli amici nel gruppo: '+JSON.stringify(opt));
+      //Logger.info('TODO','invita gli amici nel gruppo: '+JSON.stringify(opt));
       //cache.invite(opt.mails, cache.user);
       //TODO: invita altri membri nel gruppo
     });
@@ -414,5 +416,18 @@ angular.module('quiApp')
         }]
       };
       modalRoute(opt);
+    };
+
+    $scope.lockcenter = function() {
+      $scope.centerlocked = !$scope.centerlocked;
+    };
+
+    $scope.isDebug = function() {
+      return cache.isDebug();
+    };
+
+    $scope.toggleDebug = function() {
+      cache.toggleDebug();
+      //$scope.$apply();
     };
   }]);

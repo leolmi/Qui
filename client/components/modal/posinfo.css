@@ -28,7 +28,12 @@
   border-radius: 4px;
 }
 
-.road-map-waypoint:hover,
-.road-map-waypoint.selected {
+.road-map-waypoint:not(.used):hover,
+.road-map-waypoint:not(.used).selected {
   background-color: yellowgreen;
 }
+
+.road-map-waypoint.used {
+  color: #aaa;
+}
+

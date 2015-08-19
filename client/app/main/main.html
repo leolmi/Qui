@@ -58,8 +58,9 @@
   <footer class="main-footer">
     <i class="fa fa-sign-out aslink" ng-click="logout()" title="Esci"></i>
     <i class="fa fa-user-plus aslink" ng-click="invite()" title="Invita altri amici"></i>
-    <i class="fa fa-crosshairs aslink" ng-click="center()" title="Centra la mia posizione"></i>
+    <i class="fa fa-crosshairs aslink" ng-click="center()" ng-second-click="lockcenter" title="Centra la mia posizione" ng-class="{'checked':centerlocked}"></i>
     <i class="fa fa-map-marker aslink" ng-click="sharepos()" title="Condividi una posizione"></i>
+    <i class="fa fa-bug aslink onright" ng-click="toggleDebug()" title="Attiva la modalità debug" ng-class="{'checked':isDebug()}"></i>
     <i class="btn-hidden fa aslink onright" ng-click="swipe()"
        ng-class="{'fa-comments':page=='user', 'fa-users':page=='chat', 'fa-user':page=='group'}"></i>
   </footer>

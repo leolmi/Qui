@@ -58,4 +58,9 @@ angular.module('quiApp')
     infos.points.forEach(function(p){
       $scope.modal.context.route.items.push(getItem(p));
     });
+
+    $scope.isUsed = function(p){
+      return cache.util.isSamePos(p, $scope.modal.context.route.origin) ||
+        cache.util.isSamePos(p, $scope.modal.context.route.destination);
+    };
   }]);

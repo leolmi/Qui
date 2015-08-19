@@ -16,7 +16,7 @@
     </div>
     <label>Punti intermedi:</label>
     <div class="road-map-waypoints">
-      <div class="road-map-waypoint" ng-class="{'selected':p.selected}" ng-repeat="p in modal.context.route.items">
+      <div class="road-map-waypoint" ng-class="{'selected':p.selected, 'used':isUsed(p)}" ng-repeat="p in modal.context.route.items">
         <i class="fa" ng-class="{'fa-check-square':p.selected,'fa-square':!p.selected}" ng-click="p.selected = !p.selected"></i> {{p.name}}
       </div>
     </div>
