@@ -9,8 +9,11 @@
   <i class="fa fa-arrow-circle-o-left aslink" ng-click="sharepos()"></i>
   <i class="fa fa-map-marker aslink onright" ng-click="sharethis()"></i>
 </div>
-
-<div class="monitor" ng-hide="share">
+<div class="monitor-toggler" ng-class="{'on-bottom':!cache().monitor, 'hidden':share}">
+  <span ng-class="{'hidden':cache().monitor}">{{cache().user.nick}}</span>
+  <i class="aslink fa" ng-class="{'fa-chevron-circle-down':cache().monitor,'fa-chevron-circle-up':!cache().monitor}" ng-click="toggleMonitor()"></i>
+</div>
+<div class="monitor" ng-hide="share" ng-class="{'minimized':!cache().monitor}">
   <section class="section user" ng-class="{'active':page=='user'}">
     <div class="title"><i class="fa fa-fw fa-user"></i> {{cache().user.nick}}</div>
     <div class="info" ng-show="mypos">
@@ -61,7 +64,7 @@
     <i class="fa fa-crosshairs aslink" ng-click="center()" ng-second-click="lockcenter" title="Centra la mia posizione" ng-class="{'checked':centerlocked}"></i>
     <i class="fa fa-map-marker aslink" ng-click="sharepos()" title="Condividi una posizione"></i>
     <i class="fa fa-bug aslink onright" ng-click="toggleDebug()" title="Attiva la modalità debug" ng-class="{'checked':isDebug()}"></i>
-    <i class="btn-hidden fa aslink onright" ng-click="swipe()"
+    <i class="btn-hidden fa aslink onright" ng-click="swipe()" ng-show="cache().monitor"
        ng-class="{'fa-comments':page=='user', 'fa-users':page=='chat', 'fa-user':page=='group'}"></i>
   </footer>
 </div>

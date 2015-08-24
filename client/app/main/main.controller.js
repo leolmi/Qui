@@ -430,4 +430,9 @@ angular.module('quiApp')
       cache.toggleDebug();
       //$scope.$apply();
     };
+
+    $scope.toggleMonitor = function() {
+      $scope.cache().monitor = !$scope.cache().monitor;
+    };
+
   }]);

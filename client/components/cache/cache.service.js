@@ -53,6 +53,7 @@ angular.module('quiApp')
         members:[],
         points:[],
         welcomed:false,
+        monitor:true,
         pos:EmptyPos(),
         locationOptions:{
           enableHighAccuracy: true,
@@ -238,7 +239,6 @@ angular.module('quiApp')
     /**
      * Condivide una posizione
      * @param pos
-     * @param desc
      * @param cb
      * @returns {*}
      */

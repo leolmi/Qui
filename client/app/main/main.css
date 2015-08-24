@@ -28,6 +28,12 @@
 .monitor:hover {
   opacity: .93;
 }
+.monitor.minimized {
+  height: 0;
+}
+.monitor.minimized > section {
+  display: none;
+}
 
 .monitor > section {
   padding: 10px;
@@ -115,6 +121,25 @@
   top: 40px;
   color: orange;
 }
+
+.monitor-toggler {
+  position: absolute;
+  right: 10px;
+  bottom: 204px;
+  font-size: 14px;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+}
+.monitor-toggler > i {
+  /*bottom: 44px;*/
+  font-size: 24px;
+}
+.monitor-toggler.on-bottom {
+  bottom: 44px;
+}
+
 
 @media(max-width: 400px) {
   .finder {
