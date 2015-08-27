@@ -344,6 +344,13 @@ angular.module('quiApp')
         pos.altitude==_infos.pos.altitude);
     }
 
+    function isValid(pos) {
+      return (
+        pos &&
+        _.isNumber(pos.latitude) &&
+        _.isNumber(pos.longitude));
+    }
+    
     /**
      * Gestisce i dati posizionali
      * @param xpos
@@ -354,7 +361,7 @@ angular.module('quiApp')
       var pos = Pos(xpos);
       if (_debug)
         Logger.info('Lettura:', getMarkerPointCoordStr(pos));
-      if (!isTheSame(pos)) {
+      if (!isTheSame(pos) && isValid(pos)) {
         pushPos(pos, function() {
           cb();
           readPositionTimeout();
