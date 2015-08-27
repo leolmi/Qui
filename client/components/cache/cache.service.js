@@ -58,7 +58,7 @@ angular.module('quiApp')
         locationOptions:{
           enableHighAccuracy: true,
           timeout: 5000,
-          maximumAge: 75000
+          maximumAge: 0
         }
       };
       return infos;
